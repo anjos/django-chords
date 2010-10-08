@@ -9,7 +9,7 @@
 from django.shortcuts import render_to_response#, redirect
 from django.template import RequestContext
 
-def index(request, template_name="chords/index.html"):
+def view_songs(request, template_name="chords/index.html"):
   """Views all songs input at the system, arranged by date. Lastest first."""
 
   return render_to_response(template_name,
@@ -31,10 +31,12 @@ def songbook(request, by, index=True, order='descending'):
   
   The PDF should contain an index if possible!
   """
+  pass
 
 def performer_songbook(request, index=True, order='descending'):
   """Returns a PDF book of all songs available in the website for a certain
   performer or composer."""
+  pass
 
 def song(request, template_name="chords/song.html"):
   """Views a specific song."""

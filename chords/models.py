@@ -69,7 +69,7 @@ class Song(models.Model):
 
   composer = models.CharField(_(u'Composer'), help_text=_(u'The original composer of this song'), max_length=100, blank=True)
 
-  year = models.PositiveSmallIntegerField(_(u'Year'), help_text=_(u'The year of composition.'), blank=True)
+  year = models.PositiveSmallIntegerField(_(u'Year'), help_text=_(u'The year of composition.'), blank=True, null=True)
 
   tone = models.CharField(_(u'Tone'), help_text=_(u'The tone for this music'),
       max_length=3, choices=TONE_CHOICES, blank=False, null=False)
