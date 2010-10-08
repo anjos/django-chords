@@ -1,0 +1,5 @@
+*.py?
+*~
+sw
+installer/*.egg
+*.egg-info
