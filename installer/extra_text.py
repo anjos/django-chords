@@ -21,7 +21,7 @@ SOURCES = [
     #('git+http://github.com/simonw/django-openid.git', 'django-openid'),
     ]
 LOCALS = [
-    'portal',
+    '.',
     ]
 
 def after_install(options, home_dir):
@@ -37,6 +37,7 @@ def after_install(options, home_dir):
   subprocess.call(installer + ['pip'])
   
   installer = [os.path.join(home_dir, bin, 'pip'), 'install']
+  installer += ['--use-mirrors']
   installer += ['--find-links=%s' % (k,) for k in SWURL]
   if options.upgrade: installer.append('--upgrade')
 

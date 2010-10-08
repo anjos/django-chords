@@ -7,22 +7,22 @@ LANGUAGES=en pt_BR fr es
 
 # These are helpers
 admin=sw/bin/django-admin.py
-project=$(shell basename `pwd`)
+project=chords
 MAKE_MESSAGE=$(admin) makemessages --all --extension=html,py,txt
 COMPILE_MESSAGE=$(admin) compilemessages
 
-.PHONY: test clean 
+.PHONY: clean mrproper generate_bootstrap bootstrap upgrade strings compile languages test
 
-.PHONY: clean mrproper generate_bootstrap bootstrap upgrade strings compile languages 
+all: clean bootstrap strings compile test
 
 generate_bootstrap:
 	$(MAKE) --directory=installer generate
 
 bootstrap: generate_bootstrap
-	@./installer/bootstrap.py --quiet --no-site-packages --python=$(python) sw
+	@./installer/bootstrap.py --quiet --python=$(python) sw
 
 upgrade:
-	@./installer/bootstrap.py --quiet --no-site-packages --python=$(python) --upgrade sw
+	@./installer/bootstrap.py --quiet --python=$(python) --upgrade sw
 
 clean: 	
 	@find . -name '*~' -print0 | xargs -0 rm -vf 

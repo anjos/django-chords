@@ -9,7 +9,11 @@
 import os, datetime, hashlib
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext, ugettext
 from django.contrib.auth.models import User
+from django.conf import settings
+
+from parser import syntax_analysis, parse
 
 class Song(models.Model):
   """A song with chords."""
@@ -51,7 +55,7 @@ class Song(models.Model):
       (u'Abm', _(u'A flat minor')),
       )
 
-  user = models.ForeignKey(User, null=False, default=User.objects.get(id=1))
+  user = models.ForeignKey(User, null=False)
 
   date = models.DateTimeField(_('Created'), 
       auto_now_add=True, editable=False, null=False, blank=False)
@@ -70,11 +74,61 @@ class Song(models.Model):
   tone = models.CharField(_(u'Tone'), help_text=_(u'The tone for this music'),
       max_length=3, choices=TONE_CHOICES, blank=False, null=False)
 
-  def upload_path(object, original):
+  def upload_path(self, original):
     """Tells the FileField how to choose a name for this file."""
-    f = open(original, 'rt')
-    sha1 = hashlib.sha1(f.read()).hexdigest()[:8]
-    f.close()
-    return os.path.join('chords', sha1 + '.chord')
+    hashable = self.title + self.performer + self.composer + self.tone
+    sha1 = hashlib.sha1(hashable.encode('ascii','ignore')).hexdigest()[:8]
+    path = os.path.join('chords', 'songs', sha1 + '.chord')
+    if os.path.exists(os.path.join(settings.MEDIA_ROOT, path)):
+      os.unlink(os.path.join(settings.MEDIA_ROOT, path))
+    return path
 
-  song = models.FileField(_(u'Song'), help_text=_(u'Upload the text file containing your song using this field. We use the "chordpro" textual format. Read the project documentation for more information on the format.', null=False, blank=False, upload_to=upload_path)
+  song = models.FileField(_(u'Song'), help_text=_(u'Upload the text file containing your song using this field. We use the "chordpro" textual format. Read the project documentation for more information on the format.'), null=False, blank=False, upload_to=upload_path)
+
+  def save(self, *args, **kwargs):
+    self.song.open('rt')
+    syntax_analysis(parse(self.song.file)) #throws if any problems occur
+    self.song.seek(0)
+    super(Song, self).save(*args, **kwargs)
+
+  class Meta:
+    verbose_name = _(u"song")
+    verbose_name_plural = _(u"songs")
+
+    # please note that if you change the field bellow, you should revise 
+    # upload_path() above, to make sure we hold uniqueness for file names.
+    unique_together = ('title', 'tone', 'performer', 'composer')
+
+  def __unicode__(self):
+    return ugettext(u'Song(%(title)s in %(tone)s)') % \
+        {'title': self.title, 'tone': self.get_tone_display()}
+
+class Collection(models.Model):
+  """A collection of songs."""
+
+  name = models.CharField(_(u'Name'), max_length=100, help_text=_(u'The name of this collection'), blank=False, null=False, unique=True)
+
+  date = models.DateTimeField(_('Created'), 
+      auto_now_add=True, editable=False, null=False, blank=False)
+
+  updated = models.DateTimeField(_('Last updated'),
+      auto_now=True, editable=False, null=False, blank=False)
+
+  owner = models.ForeignKey(User, null=False)
+
+  song = models.ManyToManyField(Song)
+
+  class Meta:
+    verbose_name = _(u"collection")
+    verbose_name_plural = _(u"collections")
+
+  def __unicode__(self):
+    return ungettext(u'Collection(%(name)s from %(owner)s, %(songs)d song)', 
+                     u'Collection(%(name)s from %(owner)s, %(songs)d songs)', 
+                     self.song.count()) % \
+                         {
+                           'name': self.name, 
+                           'songs': self.song.count(), 
+                           'owner': self.owner.username
+                         }
+
