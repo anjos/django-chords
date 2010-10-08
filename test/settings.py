@@ -102,6 +102,6 @@ INSTALLED_APPS = (
   'rosetta',
 
   # These are mine
-  'bitrepo',
+  'chords',
 )
 

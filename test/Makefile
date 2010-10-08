@@ -4,7 +4,7 @@
 # a little make function to ease the administration task
 admin=PYTHONPATH=$(2) ../sw/bin/django-admin.py $(1) --settings=settings
 python=../sw/bin/python
-project=bitrepo
+project=chords
 
 all:
 	@if [ ! -e db.sql3 ]; then $(MAKE) admin; fi

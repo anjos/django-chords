@@ -1,0 +1,258 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-10-08 14:56+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
+
+#: admin.py:17
+msgid "Collections"
+msgstr ""
+
+#: admin.py:30
+msgid "Songs"
+msgstr ""
+
+#: models.py:19
+msgid "A"
+msgstr ""
+
+#: models.py:20
+msgid "A sharp"
+msgstr ""
+
+#: models.py:21
+msgid "B flat"
+msgstr ""
+
+#: models.py:22
+msgid "B"
+msgstr ""
+
+#: models.py:23
+msgid "C"
+msgstr ""
+
+#: models.py:24
+msgid "C sharp"
+msgstr ""
+
+#: models.py:25
+msgid "D flat"
+msgstr ""
+
+#: models.py:26
+msgid "D"
+msgstr ""
+
+#: models.py:27
+msgid "D sharp"
+msgstr ""
+
+#: models.py:28
+msgid "E flat"
+msgstr ""
+
+#: models.py:29
+msgid "E"
+msgstr ""
+
+#: models.py:30
+msgid "F"
+msgstr ""
+
+#: models.py:31
+msgid "F sharp"
+msgstr ""
+
+#: models.py:32
+msgid "G flat"
+msgstr ""
+
+#: models.py:33
+msgid "G"
+msgstr ""
+
+#: models.py:34
+msgid "G sharp"
+msgstr ""
+
+#: models.py:35
+msgid "A flat"
+msgstr ""
+
+#: models.py:36
+msgid "A minor"
+msgstr ""
+
+#: models.py:37
+msgid "A sharp minor"
+msgstr ""
+
+#: models.py:38
+msgid "B flat minor"
+msgstr ""
+
+#: models.py:39
+msgid "B minor"
+msgstr ""
+
+#: models.py:40
+msgid "C minor"
+msgstr ""
+
+#: models.py:41
+msgid "C sharp minor"
+msgstr ""
+
+#: models.py:42
+msgid "D flat minor"
+msgstr ""
+
+#: models.py:43
+msgid "D minor"
+msgstr ""
+
+#: models.py:44
+msgid "D sharp minor"
+msgstr ""
+
+#: models.py:45
+msgid "E flat minor"
+msgstr ""
+
+#: models.py:46
+msgid "E minor"
+msgstr ""
+
+#: models.py:47
+msgid "F minor"
+msgstr ""
+
+#: models.py:48
+msgid "F sharp minor"
+msgstr ""
+
+#: models.py:49
+msgid "G flat minor"
+msgstr ""
+
+#: models.py:50
+msgid "G minor"
+msgstr ""
+
+#: models.py:51
+msgid "G sharp minor"
+msgstr ""
+
+#: models.py:52
+msgid "A flat minor"
+msgstr ""
+
+#: models.py:57 models.py:95
+msgid "Created"
+msgstr ""
+
+#: models.py:60 models.py:98
+msgid "Last updated"
+msgstr ""
+
+#: models.py:63
+msgid "Title"
+msgstr ""
+
+#: models.py:63
+msgid "This song's title"
+msgstr ""
+
+#: models.py:65
+msgid "Performer"
+msgstr ""
+
+#: models.py:65
+msgid ""
+"You can write here the name of the performer you took this version from."
+msgstr ""
+
+#: models.py:67
+msgid "Composer"
+msgstr ""
+
+#: models.py:67
+msgid "The original composer of this song"
+msgstr ""
+
+#: models.py:69
+msgid "Year"
+msgstr ""
+
+#: models.py:69
+msgid "The year of composition."
+msgstr ""
+
+#: models.py:71
+msgid "Tone"
+msgstr ""
+
+#: models.py:71
+msgid "The tone for this music"
+msgstr ""
+
+#: models.py:81
+msgid "Song"
+msgstr ""
+
+#: models.py:81
+msgid ""
+"Upload the text file containing your song using this field. We use the "
+"\"chordpro\" textual format. Read the project documentation for more "
+"information on the format."
+msgstr ""
+
+#: models.py:84
+msgid "song"
+msgstr ""
+
+#: models.py:85
+msgid "songs"
+msgstr ""
+
+#: models.py:88
+#, python-format
+msgid "Song(%(title)s in %(tone)s)"
+msgstr ""
+
+#: models.py:93
+msgid "Name"
+msgstr ""
+
+#: models.py:93
+msgid "The name of this collection"
+msgstr ""
+
+#: models.py:106
+msgid "collection"
+msgstr ""
+
+#: models.py:107
+msgid "collections"
+msgstr ""
+
+#: models.py:110
+#, python-format
+msgid "Collection(%(name)s from %(owner)s, %(songs)d song)"
+msgid_plural "Collection(%(name)s from %(owner)s, %(songs)d songs)"
+msgstr[0] ""
+msgstr[1] ""

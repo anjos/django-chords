@@ -6,6 +6,9 @@
 """Some interesting views for the django-chors project
 """
 
+from django.shortcuts import render_to_response#, redirect
+from django.template import RequestContext
+
 def index(request, template_name="chords/index.html"):
   """Views all songs input at the system, arranged by date. Lastest first."""
 

@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 setup(
 
     name = 'django-chords',
-    version = '0.2.2',
+    version = '0.1',
     packages = find_packages(),
 
     # we also need all translation files and templates
@@ -31,6 +31,9 @@ setup(
     install_requires = [
       'Django>=1.2',
       'docutils',
+			'django-rosetta',
+			'PIL',
+      'reportlab',
       ],
 
     # metadata for upload to PyPI

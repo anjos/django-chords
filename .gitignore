@@ -3,3 +3,4 @@
 sw
 installer/*.egg
 *.egg-info
+chords/media/songs

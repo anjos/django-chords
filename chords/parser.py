@@ -196,7 +196,7 @@ class Line:
 
   def __init__(self, v, lineno):
     self.lineno = lineno
-    self.value = v.decode
+    self.value = v
 
   def __str__(self):
     return '%03d %s' % (self.lineno, self.value)
@@ -234,17 +234,15 @@ def parse(f):
   """Parses a chord-pro formatted file and turns the input into low-level
   constructs that can be easily analyzed by our high-level syntax parser."""  
 
-  d = codecs.open(f, 'rt', 'utf-8')
   input = []
   cmdparser = CommandParser()
   lineparser = LineParser()
-  for i, l in enumerate(d):
+  for i, l in enumerate(f):
     sl = l.strip()
     if not sl: input.append(EmptyLine(i+1))
     elif sl[0] == '#': input.append(HashComment(sl, i+1))
     elif sl[0] == '{': input.append(cmdparser(sl, i+1))
     else: input.append(lineparser(l.rstrip(), i+1))
-  d.close()
 
   return input
 
@@ -355,6 +353,8 @@ if __name__ == '__main__':
     print 'usage: %s <file.chord>' % os.path.basename(sys.argv[0])
     sys.exit(1)
 
-  items = syntax_analysis(parse(sys.argv[1]))
+  f = codecs.open(sys.argv[1], 'rt', 'utf-8')
+  items = syntax_analysis(parse(f))
+  f.close()
   print 'File %s contains %d blocks' % (sys.argv[1], len(items))
   for k in items: print k
