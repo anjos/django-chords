@@ -1,0 +1,16 @@
+{TITLE: First title}
+{SUBTITLE: First subtitle}
+Blank line follows[G]
+
+Blank line precedes[A]
+
+{ci:Chorus} {soc}
+Two directives on one line
+{eoc}
+
+{c:two}comments{ci:on one line}
+ # indented comment
+ embedded directive {Title: Embedded title directive}
+ {subtitle: Indented lowercase subtitle directive}
+ {define: <chord_name> <position> <String6> ..
+<String1>}

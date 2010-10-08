@@ -1,0 +1,19 @@
+{Title: Title test example}
+{Subtitle: Subtitle}
+{Album: Album}
+{Key:F#m}
+Chords [Bb]and [C#]Lyrics
+[A]An example [D]of [G]lyrics and tablature
+And another example with no chords
+[G][F][E][Chords][Only]
+{Comment: a comment}
+{Comment_italic: italic comment}
+{Comment_box: comment box}
+# comment line
+{start_of_chorus}
+[B]chorus
+chorus[C]
+{end_of_chorus}
+{start_of_tab}
+tablature [F] lines
+{end_of_tab}

@@ -1,0 +1,14 @@
+{T: Title test example}
+{St: Subtitle}
+{A: Album}
+[A]An example [D]of [G]lyrics and tablature
+{C: a comment}
+{Ci: italic comment}
+{Cb: comment box}
+# comment line
+{soc}
+[B]chorus
+{eoc}
+{sot}
+tablature
+{eot}
