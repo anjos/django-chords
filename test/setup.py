@@ -23,6 +23,7 @@ setup(
     entry_points = {
       'console_scripts': [
         'djm = scripts.manage:main',
+        'start_project.py = scripts.initial_data:main',
         ],
       },
 

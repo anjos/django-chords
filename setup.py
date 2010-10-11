@@ -31,8 +31,8 @@ setup(
     install_requires = [
       'Django>=1.2',
       'docutils',
-			'django-rosetta',
-			'PIL',
+      'django-rosetta',
+      'PIL',
       'reportlab',
       ],
 

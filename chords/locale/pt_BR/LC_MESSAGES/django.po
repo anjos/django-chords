@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-10 21:44+0200\n"
+"POT-Creation-Date: 2010-10-11 09:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgid ""
 "trying to upload. Here is a hint: %(error)s"
 msgstr ""
 
-#: admin.py:45 templates/chords/index.html:8
+#: admin.py:45 templates/chords/list.html:8
 msgid "Songs"
 msgstr ""
 
@@ -177,7 +177,7 @@ msgstr ""
 msgid "Last updated"
 msgstr ""
 
-#: models.py:66 templates/chords/index.html:22
+#: models.py:66 templates/chords/list.html:22
 msgid "Title"
 msgstr ""
 
@@ -210,7 +210,7 @@ msgstr ""
 msgid "The year of composition."
 msgstr ""
 
-#: models.py:74 templates/chords/index.html:24
+#: models.py:74 templates/chords/list.html:24
 msgid "Tone"
 msgstr ""
 
@@ -265,44 +265,44 @@ msgid_plural "Collection(%(name)s from %(owner)s, %(songs)d songs)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/chords/index.html:13
+#: templates/chords/list.html:13
 msgid "Manage songs"
 msgstr ""
 
-#: templates/chords/index.html:14
+#: templates/chords/list.html:14
 msgid "Add song"
 msgstr ""
 
-#: templates/chords/index.html:15
+#: templates/chords/list.html:15
 msgid "View Collections"
 msgstr ""
 
-#: templates/chords/index.html:17
+#: templates/chords/list.html:17
 msgid "Available Songs"
 msgstr ""
 
-#: templates/chords/index.html:18
+#: templates/chords/list.html:18
 msgid ""
 "From this page you have access to all uploaded songs, last updated first. "
 "You also have access to collections managed by our users."
 msgstr ""
 
-#: templates/chords/index.html:23
+#: templates/chords/list.html:23
 msgid "Artist"
 msgstr ""
 
-#: templates/chords/index.html:25
-msgid "User"
-msgstr ""
-
-#: templates/chords/index.html:26
+#: templates/chords/list.html:25
 msgid "Updated"
 msgstr ""
 
-#: templates/chords/index.html:30
+#: templates/chords/list.html:29
 msgid "Click here to access this song"
 msgstr ""
 
-#: templates/chords/index.html:41
+#: templates/chords/list.html:36
+msgid "by"
+msgstr ""
+
+#: templates/chords/list.html:39
 msgid "No songs uploaded so far."
 msgstr ""

@@ -21,6 +21,7 @@ SOURCES = [
     #('git+http://github.com/simonw/django-openid.git', 'django-openid'),
     ]
 LOCALS = [
+    '..',
     '.',
     ]
 

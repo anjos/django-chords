@@ -14,54 +14,56 @@ from django.core.files import File
 from chords.models import *
 import os, sys, fnmatch
 
-# This bit will create the superuser
 from django.contrib.auth.models import User
-User.objects.all().delete()
 
-name = 'admin'
-admin = User()
-admin.username = name
-admin.first_name = name.capitalize()
-admin.last_name = name.capitalize() + 'ston'
-admin.email = '%s@example.com' % name
-admin.is_staff = True
-admin.is_active = True
-admin.is_superuser = True
-admin.set_password(admin.username)
-admin.save()
-print 'Created user "%s" with password "%s"' % (name, name)
+def main():
+  # This bit will create the superuser
+  User.objects.all().delete()
 
-# This bit will load our chord examples
-Song.objects.all().delete()
-counter = 0
-for ex in fnmatch.filter(os.listdir('examples'), '*.chord'):
-	f = open(os.path.join('examples', ex), 'rt')
-	s = Song()
-	s.user = admin
-	counter += 1
-	s.title = 'Song %d' % counter
-	s.performer = 'Performer %d' % counter
-	s.composer = 'Composer %d' % counter
-	s.year = 2010
-	s.tone = 'A'
-	s.song = File(f)
-	s.save()
-	f.close()
-	print 'Created %s' % s
+  name = 'admin'
+  admin = User()
+  admin.username = name
+  admin.first_name = name.capitalize()
+  admin.last_name = name.capitalize() + 'ston'
+  admin.email = '%s@example.com' % name
+  admin.is_staff = True
+  admin.is_active = True
+  admin.is_superuser = True
+  admin.set_password(admin.username)
+  admin.save()
+  print 'Created user "%s" with password "%s"' % (name, name)
 
-# This bit will create 2 collections
-Collection.objects.all().delete()
-c1 = Collection()
-c1.name = 'First Collection'
-c1.owner = admin
-c1.save()
-c1.song = Song.objects.all()[:3]
-c1.save()
-print 'Created %s' % c1
-c2 = Collection()
-c2.name = 'Second Collection'
-c2.owner = admin
-c2.save()
-c2.song = Song.objects.all()[3:]
-c2.save()
-print 'Created %s' % c2
+  # This bit will load our chord examples
+  Song.objects.all().delete()
+  counter = 0
+  for ex in fnmatch.filter(os.listdir('examples'), '*.chord'):
+    f = open(os.path.join('examples', ex), 'rt')
+    s = Song()
+    s.user = admin
+    counter += 1
+    s.title = 'Song %d' % counter
+    s.performer = 'Performer %d' % counter
+    s.composer = 'Composer %d' % counter
+    s.year = 2010
+    s.tone = 'A'
+    s.song = File(f)
+    s.save()
+    f.close()
+    print 'Created %s' % s
+
+  # This bit will create 2 collections
+  Collection.objects.all().delete()
+  c1 = Collection()
+  c1.name = 'First Collection'
+  c1.owner = admin
+  c1.save()
+  c1.song = Song.objects.all()[:3]
+  c1.save()
+  print 'Created %s' % c1
+  c2 = Collection()
+  c2.name = 'Second Collection'
+  c2.owner = admin
+  c2.save()
+  c2.song = Song.objects.all()[3:]
+  c2.save()
+  print 'Created %s' % c2

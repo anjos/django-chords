@@ -33,7 +33,7 @@
     <td class="artist">{{ obj.composer.capitalize }}</td>
     {% endif %}
     <td class="tone">{{ obj.get_tone_display }}</td>
-    <td class="date">{{ obj.updated|date:"D, d/m/y" }} {% trans "by" %} {{ obj.username }}</td>
+    <td class="date">{{ obj.updated|date:"D, d/m/y" }} {% trans "by" %} {{ obj.user.first_name.capitalize }}</td>
   </tr>
   {% empty %}
   <tr><td colspan="5">{% trans "No songs uploaded so far." %}</td></tr>

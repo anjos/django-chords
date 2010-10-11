@@ -5,6 +5,6 @@ installer/*.egg
 *.egg-info
 *.swp
 chords/media/songs
-installer/bootstrap.py
-installer/ez_setup.py
+test/installer/bootstrap.py
+test/installer/ez_setup.py
 test/db.sql3

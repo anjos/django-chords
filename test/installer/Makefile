@@ -18,3 +18,4 @@ clean:
 
 mrproper: clean
 	@rm -rf ${INSTALLDIR}
+	@rm -rf *.egg
