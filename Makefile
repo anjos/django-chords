@@ -2,7 +2,7 @@
 # Created by Andre Anjos <Andre.dos.Anjos@gmail.com>, 20-Mar-2007
 
 # These are variables you can configure for your application
-python=python2.5
+python=python
 LANGUAGES=en pt_BR fr es
 
 # These are helpers
