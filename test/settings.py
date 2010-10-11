@@ -48,7 +48,7 @@ DEFAULT_LANGUAGE = 1
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = BASEDIR 
+MEDIA_ROOT = os.path.join(BASEDIR, 'media') 
 
 # URL that handles the media served from MEDIA_ROOT.
 # Example: "http://media.lawrence.com/"

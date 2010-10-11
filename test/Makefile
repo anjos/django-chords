@@ -8,7 +8,6 @@ project=chords
 
 all:
 	@if [ ! -e db.sql3 ]; then $(MAKE) admin; fi
-	@if [ ! -L $(project) ]; then ln -s ../$(project)/media $(project); fi
 	$(call admin,runserver,..:.) 8080
 
 admin:
