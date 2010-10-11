@@ -9,13 +9,22 @@
 from django.shortcuts import render_to_response#, redirect
 from django.template import RequestContext
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.http import Http404
+from django.db.models.sql.query import FieldError
 
 from models import *
 
 def view_songs(request, template_name="chords/songs.html"):
   """Views all songs input at the system, arranged by date. Lastest first."""
   
-  objects = Song.objects.order_by('-updated')
+  objects = Song.objects.all()
+
+  # A get request determines the order. The default is -updated
+  try: 
+    order = request.GET.get('o', '-updated').strip()
+    objects = objects.order_by(order)
+  except FieldError:
+    raise Http404
 
   paginator = Paginator(objects, 20)
 
@@ -62,8 +71,17 @@ def view_collection(request, collection_id,
   """Views a specific collection."""
 
   collection = Collection.objects.get(id=collection_id)
+  objects = collection.song.all()
 
-  paginator = Paginator(collection.song.order_by('-updated'), 20)
+  # A get request determines the order. The default is -updated
+  try: 
+    order = request.GET.get('o', '-updated').strip()
+    objects = objects.order_by(order)
+  except FieldError:
+    print e
+    raise Http404
+
+  paginator = Paginator(objects, 20)
 
   try: page = int(request.GET.get('page', '1'))
   except ValueError: page = 1

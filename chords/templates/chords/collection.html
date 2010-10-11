@@ -22,10 +22,10 @@
 
   <table class="songs">
     <tr>
-      <th>{% trans "Title" %}</th>
-      <th>{% trans "Artist" %}</th>
-      <th>{% trans "Tone" %}</th>
-      <th>{% trans "Updated" %}</th>
+      <th>{% trans "Title" %} {% chords_sorter "title" %}</th>
+      <th>{% trans "Artist" %} {% chords_sorter "performer" %}</th>
+      <th>{% trans "Tone" %} {% chords_sorter "tone" %}</th>
+      <th>{% trans "Updated" %} {% chords_sorter "updated" %}</th>
     </tr>
     {% for obj in pages.object_list %}
     <tr class="{% cycle "even" "odd" %}">

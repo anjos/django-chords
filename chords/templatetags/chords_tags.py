@@ -13,3 +13,7 @@ register = template.Library()
 def chords_paginator(paginator):
   return {'paginator': paginator}
 
+@register.inclusion_tag('chords/sorter.html')
+def chords_sorter(what):
+  return {'what': what}
+
