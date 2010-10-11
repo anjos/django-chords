@@ -132,3 +132,6 @@ class Collection(models.Model):
                            'owner': self.owner.username
                          }
 
+  def last_update(self):
+    """Returns the last updated song on this collection."""
+    return self.song.order_by('-updated')[0]

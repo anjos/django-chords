@@ -8,16 +8,27 @@
 
 from django.shortcuts import render_to_response#, redirect
 from django.template import RequestContext
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from models import *
 
-def view_songs(request, template_name="chords/list.html"):
+def view_songs(request, template_name="chords/songs.html"):
   """Views all songs input at the system, arranged by date. Lastest first."""
+  
+  objects = Song.objects.order_by('-updated')
 
-  objects = Song.objects.all()
+  paginator = Paginator(objects, 20)
+
+  try: page = int(request.GET.get('page', '1'))
+  except ValueError: page = 1
+
+  try: pages = paginator.page(page)
+  except (EmptyPage, InvalidPage): pages = paginator.page(paginator.num_pages)
 
   return render_to_response(template_name,
-                            {'objects': objects, },
+                            {
+                              'pages': pages, 
+                            },
                             context_instance=RequestContext(request))
 
 
@@ -25,16 +36,51 @@ def view_song(request, song_id, template_name="chords/song.html"):
   """Views a specific song."""
   
   return render_to_response(template_name,
+                            {'object': Song.objects.get(id=song_id), },
                             context_instance=RequestContext(request))
 
 def view_collections(request, template_name="chords/collections.html"):
   """Views all collections input at the system, arranged by date. Lastest
   first."""
 
-  objects = Collection.objects.all()
+  objects = Collection.objects.order_by('-updated')
+
+  paginator = Paginator(objects, 10)
+
+  try: page = int(request.GET.get('page', '1'))
+  except ValueError: page = 1
+
+  try: pages = paginator.page(page)
+  except (EmptyPage, InvalidPage): pages = paginator.page(paginator.num_pages)
 
   return render_to_response(template_name,
-                            {'objects': objects, },
+                            {'pages': pages, },
+                            context_instance=RequestContext(request))
+
+def view_collection(request, collection_id,
+    template_name="chords/collection.html"):
+  """Views a specific collection."""
+
+  collection = Collection.objects.get(id=collection_id)
+
+  paginator = Paginator(collection.song.order_by('-updated'), 20)
+
+  try: page = int(request.GET.get('page', '1'))
+  except ValueError: page = 1
+
+  try: pages = paginator.page(page)
+  except (EmptyPage, InvalidPage): pages = paginator.page(paginator.num_pages)
+
+  return render_to_response(template_name,
+                            {
+                              'object': collection,
+                              'pages': pages, 
+                            },
+                            context_instance=RequestContext(request))
+
+
+  return render_to_response(template_name,
+                            {'object': Collection.get(id=collection_id), },
                             context_instance=RequestContext(request))
 
 def songbook(request, by, index=True, order='descending'):

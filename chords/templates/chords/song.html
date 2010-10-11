@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block media %}
+{{ block.super }}
+{% endblock %}
+
+{% block title %}{{ object.title }} {% trans "in" %} {{ object.get_tone_display }}{% endblock %}
+
+{% block content %}
+<div class="chords">
+  <p class="navigation">
+  <span class="item"><a href="{% url chords:view-songs %}">{% trans "View songs" %}</a></span>
+  <span class="item"><a href="/admin/chords/song/{{ object.id }}/">{% trans "Manage this song" %}</a></span>
+  </p>
+  <p class="title">{{ object.title }}</p>
+  {% if object.performer or object.composer %}<p class="artist">{% if object.performer %}{{ object.performer }} {% endif %}{% if object.composer %}({% trans "by" %} {{ object.composer }})</p>{% endif %}{% endif %}
+  <p class="tone">{% trans "In" %} {{ object.get_tone_display }}</p>
+  <p class="uploaded">{% trans "Revised by" %} {{ object.user.first_name.capitalize }} {% trans "on" %} {{ object.updated|date:"D, d/m/y" }}</p>
+  {% if object.collection_set.count %}<p class="collection">{% for k in object.collection_set.all %}<a href="{% url chords:view-collection k.id %}">{{ k.name }}</a>, {% endfor %}</p>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n chords_tags %}
+
+{% block media %}
+{{ block.super }}
+{% endblock %}
+
+{% block title %}{% trans "Collections" %}{% endblock %}
+
+{% block content %}
+<div class="chords">
+  <p class="navigation">
+  <span class="item"><a href="/admin/chords/collection/">{% trans "Manage collections" %}</a></span>
+  <span class="item"><a href="/admin/chords/collection/add/">{% trans "Add collection" %}</a></span>
+  <span class="item"><a href="{% url chords:view-songs %}">{% trans "View Songs" %}</a></span>
+  </p>
+  <p class="title">{% trans "Available Collections" %}</p>
+  <p>{% trans "From this page you have access to all collections, last updated first." %}</p>
+
+  {% ifnotequal pages.paginator.num_pages 1 %}
+  <p class="pagination">pages: {% chords_paginator pages %}</p>
+  {% endifnotequal %}
+
+  <table class="collections">
+    <tr>
+      <th>{% trans "Name" %}</th>
+      <th>{% trans "Created" %}</th>
+      <th>{% trans "Owner" %}</th>
+      <th>{% trans "Last Update" %}</th>
+    </tr>
+    {% for obj in pages.object_list %}
+    <tr class="{% cycle "even" "odd" %}">
+      <td class="title"><a href="{% url chords:view-collection obj.id %}" title="{% trans "Click here to access this collection" %}">{{ obj.name }}</a></td>
+      <td class="date">{{ obj.date|date:"D, d/m/y H:i T" }}</td>
+      <td class="owner">{{ obj.owner.first_name.capitalize }}</td>
+      <td class="last-song">{% with obj.last_update as s %}{{ s.title }} {% trans "in" %} {{ s.get_tone_display }}{% endwith %}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">{% trans "No collections created so far." %}</td></tr>
+    {% endfor %}
+  </table>
+
+</div>
+{% endblock %}

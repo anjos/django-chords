@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n chords_tags %}
+
+{% block media %}
+{{ block.super }}
+{% endblock %}
+
+{% block title %}{% trans "Songs" %}{% endblock %}
+
+{% block content %}
+<div class="chords">
+  <p class="navigation">
+  <span class="item"><a href="/admin/chords/song/">{% trans "Manage songs" %}</a></span>
+  <span class="item"><a href="/admin/chords/song/add/">{% trans "Add song" %}</a></span>
+  <span class="item"><a href="{% url chords:view-collections %}">{% trans "View Collections" %}</a></span>
+  </p>
+  <p class="title">{% trans "Available Songs" %}</p>
+  <p>{% trans "From this page you have access to all uploaded songs, last updated first. You also have access to collections managed by our users." %}</p>
+
+  {% ifnotequal pages.paginator.num_pages 1 %}
+  <p class="pagination">pages: {% chords_paginator pages %}</p>
+  {% endifnotequal %}
+
+  <table class="songs">
+    <tr>
+      <th>{% trans "Title" %}</th>
+      <th>{% trans "Artist" %}</th>
+      <th>{% trans "Tone" %}</th>
+      <th>{% trans "In Collections" %}</th>
+      <th>{% trans "Updated" %}</th>
+    </tr>
+    {% for obj in pages.object_list %}
+    <tr class="{% cycle "even" "odd" %}">
+      <td class="title"><a href="{% url chords:view-song obj.id %}" title="{% trans "Click here to access this song" %}">{{ obj.title }}</a></td>
+      {% if obj.performer %}
+      <td class="artist">{{ obj.performer.capitalize }}</td>
+      {% else %}
+      <td class="artist">{{ obj.composer.capitalize }}</td>
+      {% endif %}
+      <td class="tone">{{ obj.get_tone_display }}</td>
+      <td class="collections">{{ obj.collection_set.count }}</td>
+      <td class="date">{{ obj.updated|date:"D, d/m/y H:i T" }} {% trans "by" %} {{ obj.user.first_name.capitalize }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">{% trans "No songs uploaded so far." %}</td></tr>
+    {% endfor %}
+  </table>
+
+</div>
+{% endblock %}

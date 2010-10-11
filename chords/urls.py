@@ -15,6 +15,7 @@ urlpatterns = patterns('chords.views',
     url(r'^song/$', 'view_songs', name='view-songs'), 
     url(r'^song/(?P<song_id>\d{1,4})/$', 'view_song', name='view-song'), 
     url(r'^collection/$', 'view_collections', name='view-collections'), 
+    url(r'^collection/(?P<collection_id>\d{1,4})/$', 'view_collection', name='view-collection'), 
   )
 
 # use this instead of urlpatterns directly
