@@ -11,10 +11,10 @@ from django.views.generic.simple import redirect_to
 
 urlpatterns = patterns('chords.views',
 
-    url(r'^$', 'index', name='index'), 
-    url(r'^$', redirect_to, {'url': '/c/'}),
-    url(r'^artist/$', 'by_artist', name='by-artist'), 
-    url(r'^song/$', 'view_song', name='view-song'), 
+    url(r'^$', redirect_to, {'url': 'song/'}),
+    url(r'^song/$', 'view_songs', name='view-songs'), 
+    url(r'^song/(?P<song_id>\d{1,4})/$', 'view_song', name='view-song'), 
+    url(r'^collection/$', 'view_collections', name='view-collections'), 
   )
 
 # use this instead of urlpatterns directly
