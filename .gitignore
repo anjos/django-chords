@@ -3,6 +3,7 @@
 sw
 installer/*.egg
 *.egg-info
+*.swp
 chords/media/songs
 installer/bootstrap.py
 installer/ez_setup.py

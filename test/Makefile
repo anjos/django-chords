@@ -2,21 +2,19 @@
 # Thu  4 Mar 23:14:52 2010 
 
 # a little make function to ease the administration task
-admin=PYTHONPATH=$(2) ../sw/bin/django-admin.py $(1) --settings=settings
+admin=../sw/bin/djm
 python=../sw/bin/python
-project=chords
 
 all:
 	@if [ ! -e db.sql3 ]; then $(MAKE) admin; fi
-	$(call admin,runserver,..:.) 8080
+	@$(admin) runserver 0.0.0.0:8080
 
 admin:
-	$(call admin,syncdb,.) --noinput
-	$(python) ./initial_data.py
-	@if [ -e test_data.json ]; then $(call admin,loaddata test_data.json,..:.); fi
+	@$(admin) syncdb --noinput
+	@../sw/bin/start_project.py
 
 shell:
-	$(call admin,shell,.)
+	@$(admin) shell
 
 clean:
 	@find . -name '*.pyc' -print0 | xargs -0 rm -f
@@ -26,6 +24,6 @@ smtp:
 	$(python) -m smtpd -n -c DebuggingServer localhost:1025
 
 mrproper: clean
-	@rm -f $(project)
+	@rm -f media/songs
 	@rm -rf packages
 	@rm -f *.sql3
