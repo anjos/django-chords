@@ -10,8 +10,9 @@
 {% block content %}
 <div class="chords">
   <p class="navigation">
-  <span class="item"><a href="/admin/chords/collection/{{ object.id }}">{% trans "Manage collection" %}</a></span>
+  <span class="item"><a href="{% url admin:chords_collection_change object.id %}">{% trans "Manage collection" %}</a></span>
   <span class="item"><a href="{% url chords:view-collections %}">{% trans "View Collections" %}</a></span>
+  <span class="item"><a href="{% url chords:view-artists %}">{% trans "View Artists" %}</a></span>
   <span class="item"><a href="{% url chords:view-songs %}">{% trans "View Songs" %}</a></span>
   </p>
   <p class="title">{% trans "Available Songs at collection" %} "{{ object.name }}"</p>
@@ -22,21 +23,25 @@
 
   <table class="songs">
     <tr>
+      <th>{% trans "Shortcuts" %}</th>
       <th>{% trans "Title" %} {% chords_sorter "title" %}</th>
-      <th>{% trans "Artist" %} {% chords_sorter "performer" %}</th>
+      <th>{% trans "Performer" %} {% chords_sorter "performer" %}</th>
+      <th>{% trans "Composer" %} {% chords_sorter "composer" %}</th>
       <th>{% trans "Tone" %} {% chords_sorter "tone" %}</th>
       <th>{% trans "Updated" %} {% chords_sorter "updated" %}</th>
     </tr>
     {% for obj in pages.object_list %}
     <tr class="{% cycle "even" "odd" %}">
+      <td class="shortcuts">
+        <a href="{% url chords:view-song obj.id %}" title="{% trans "view this song" %}"><img src="http://media.andreanjos.org/icons/tango/16x16/actions/go-home.png" width="16" height="16"/></a>
+        <a href="{% url chords:view-song-text obj.id %}" title="{% trans "view original text file" %}"><img src="http://media.andreanjos.org/icons/tango/16x16/mimetypes/text-x-generic.png" width="16" height="16"/></a>
+        <a href="{% url admin:chords_song_change obj.id %}" title="{% trans "edit this song" %}"><img src="http://media.andreanjos.org/icons/tango/16x16/apps/accessories-text-editor.png" width="16" height="16"/></a>
+      </td>
       <td class="title"><a href="{% url chords:view-song obj.id %}" title="{% trans "Click here to access this song" %}">{{ obj.title }}</a></td>
-      {% if obj.performer %}
-      <td class="artist">{{ obj.performer.capitalize }}</td>
-      {% else %}
-      <td class="artist">{{ obj.composer.capitalize }}</td>
-      {% endif %}
+      <td class="performer">{{ obj.performer.name }}</td>
+      <td class="composer">{{ obj.composer.name }}</td>
       <td class="tone">{{ obj.get_tone_display }}</td>
-      <td class="date">{{ obj.updated|date:"D, d/m/y H:i T" }} {% trans "by" %} {{ obj.user.first_name.capitalize }}</td>
+      <td class="date">{{ obj.updated|date:"D, d/b/Y H:i T" }} {% trans "by" %} {{ obj.user.first_name.capitalize }}</td>
     </tr>
     {% empty %}
     <tr><td colspan="5">{% trans "No songs uploaded so far." %}</td></tr>

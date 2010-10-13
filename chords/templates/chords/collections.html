@@ -12,10 +12,11 @@
   <p class="navigation">
   <span class="item"><a href="/admin/chords/collection/">{% trans "Manage collections" %}</a></span>
   <span class="item"><a href="/admin/chords/collection/add/">{% trans "Add collection" %}</a></span>
+  <span class="item"><a href="{% url chords:view-artists %}">{% trans "View Artists" %}</a></span>
   <span class="item"><a href="{% url chords:view-songs %}">{% trans "View Songs" %}</a></span>
   </p>
   <p class="title">{% trans "Available Collections" %}</p>
-  <p>{% trans "From this page you have access to all collections, last updated first." %}</p>
+  <p>{% trans "From this page you have access to all collections." %}</p>
 
   {% ifnotequal pages.paginator.num_pages 1 %}
   <p class="pagination">pages: {% chords_paginator pages %}</p>
@@ -23,16 +24,23 @@
 
   <table class="collections">
     <tr>
-      <th>{% trans "Name" %}</th>
-      <th>{% trans "Created" %}</th>
-      <th>{% trans "Owner" %}</th>
+      <th>{% trans "Shortcuts" %}</th>
+      <th>{% trans "Name" %} {% chords_sorter "name" %}</th>
+      <th>{% trans "Created" %} {% chords_sorter "date" %}</th>
+      <th>{% trans "Owner" %}{% chords_sorter "owner" %}</th>
+      <th>{% trans "Songs" %}</th>
       <th>{% trans "Last Update" %}</th>
     </tr>
     {% for obj in pages.object_list %}
     <tr class="{% cycle "even" "odd" %}">
+      <td class="shortcuts">
+        <a href="{% url chords:view-collection obj.id %}" title="{% trans "view this collection" %}"><img src="http://media.andreanjos.org/icons/tango/16x16/actions/go-home.png" width="16" height="16"/></a>
+        <a href="{% url admin:chords_collection_change obj.id %}" title="{% trans "edit this collection" %}"><img src="http://media.andreanjos.org/icons/tango/16x16/apps/accessories-text-editor.png" width="16" height="16"/></a>
+      </td>
       <td class="title"><a href="{% url chords:view-collection obj.id %}" title="{% trans "Click here to access this collection" %}">{{ obj.name }}</a></td>
-      <td class="date">{{ obj.date|date:"D, d/m/y H:i T" }}</td>
+      <td class="date">{{ obj.date|date:"D, d/b/Y H:i T" }}</td>
       <td class="owner">{{ obj.owner.first_name.capitalize }}</td>
+      <td class="songs">{{ obj.song.count }}</td>
       <td class="last-song">{% with obj.last_update as s %}{{ s.title }} {% trans "in" %} {{ s.get_tone_display }}{% endwith %}</td>
     </tr>
     {% empty %}

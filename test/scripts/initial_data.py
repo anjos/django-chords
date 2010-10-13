@@ -33,6 +33,14 @@ def main():
   admin.save()
   print 'Created user "%s" with password "%s"' % (name, name)
 
+  # This bit will create a default artist
+  Artist.objects.all().delete()
+  unknown = Artist()
+  unknown.name = u'Desconhecido da Conceição'
+  unknown.color = '000'
+  unknown.save()
+  print 'Created %s' % unknown
+
   # This bit will load our chord examples
   Song.objects.all().delete()
   counter = 0
@@ -42,11 +50,11 @@ def main():
     s.user = admin
     counter += 1
     s.title = 'Song %d' % counter
-    s.performer = 'Performer %d' % counter
-    s.composer = 'Composer %d' % counter
+    s.performer = unknown 
+    s.composer = unknown
     s.year = 2010
     s.tone = 'A'
-    s.song = File(f)
+    s.song = f.read()
     s.save()
     f.close()
     print 'Created %s' % s

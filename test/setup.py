@@ -24,6 +24,7 @@ setup(
       'console_scripts': [
         'djm = scripts.manage:main',
         'start_project.py = scripts.initial_data:main',
+        'pdf.py = scripts.pdftest:main',
         ],
       },
 

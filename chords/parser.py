@@ -29,7 +29,10 @@ class Verse:
     v = ['--- Verse:']
     v += [str(k) for k in self.lines]
     v.append('--- End verse')
-    return '\n'.join(v)
+    return u'\n'.join(v)
+
+  def as_html(self):
+    return u'\n'.join([k.as_html() for k in self.lines])
 
 class Chorus(Verse):
   """A complete chorus entry."""
@@ -54,6 +57,12 @@ class Chorus(Verse):
     v.append(self.ends)
     return '\n'.join([str(k) for k in v])
 
+  def as_html(self):
+    v = u'<span class="chorus">'
+    v += u'\n'.join([k.as_html() for k in self.lines])
+    v += u'</span>'
+    return u'\n' + v + u'\n'
+
 class Tablature(Verse):
   """A complete tablature entry."""
 
@@ -77,6 +86,12 @@ class Tablature(Verse):
     v.append(self.ends)
     return '\n'.join([str(k) for k in v])
 
+  def as_html(self):
+    v = u'<span class="tablature">'
+    v += u'\n'.join([k.as_html() for k in self.lines])
+    v += u'</span>'
+    return u'\n' + v + u'\n'
+
 class EmptyLine:
   """A line with nothing."""
 
@@ -85,6 +100,9 @@ class EmptyLine:
 
   def __str__(self):
     return '%03d ' % (self.lineno,)
+  
+  def as_html(self):
+    return u'\n'
 
 class HashComment(EmptyLine):
   """A hash comment is a line that starts with a # mark."""
@@ -95,6 +113,10 @@ class HashComment(EmptyLine):
 
   def __str__(self):
     return '%03d %s' % (self.lineno, self.comment)
+
+  def as_html(self):
+    v = u'<span class="hashcomment"># %s</span>\n' % self.comment
+    return v
 
 class Command:
   """A generic command from chordpro."""
@@ -148,6 +170,9 @@ class Comment(Command):
   def __str__(self):
     return '%03d {comment: %s}' % (self.lineno, self.value)
 
+  def as_html(self):
+    return u'<span class="comment">%s</span>\n' % self.value
+
 class UnsupportedCommand(Command):
   """One of the chordpro commands we don't support."""
 
@@ -159,6 +184,9 @@ class UnsupportedCommand(Command):
   def __str__(self):
     return '%03d {%s: %s} [UNSUPPORTED]' % \
         (self.lineno, self.command, self.value)
+
+  def as_html(self):
+    return u''
 
 class CommandParser:
   """Parses and generates the proper command from the input."""
@@ -201,6 +229,9 @@ class Line:
   def __str__(self):
     return '%03d %s' % (self.lineno, self.value)
 
+  def as_html(self):
+    return u'<span class="line">%s</span>' % self.value
+
 class ChordLine(Line):
   """A special category of line that contains chords."""
 
@@ -219,6 +250,13 @@ class ChordLine(Line):
     v = [cline, '%03d %s' % (self.lineno, self.bare)]
     return '\n'.join(v)
 
+  def as_html(self):
+    cline = ''
+    for c in self.chords: cline += (' '*c[0] + c[1].capitalize())
+    v = u'<span class="chords">%s</span>\n' % cline
+    v += u'<span class="lyrics">%s</span>\n' % self.bare
+    return v 
+
 class LineParser:
 
   chord = re.compile(r'\[(?P<v>[^\]]*)\]')
@@ -230,14 +268,14 @@ class LineParser:
     if LineParser.chord.search(l): return ChordLine(l, lineno)
     return Line(l, lineno)
 
-def parse(f):
+def parse(t):
   """Parses a chord-pro formatted file and turns the input into low-level
   constructs that can be easily analyzed by our high-level syntax parser."""  
 
   input = []
   cmdparser = CommandParser()
   lineparser = LineParser()
-  for i, l in enumerate(f):
+  for i, l in enumerate(t.split('\n')):
     sl = l.strip()
     if not sl: input.append(EmptyLine(i+1))
     elif sl[0] == '#': input.append(HashComment(sl, i+1))
@@ -278,7 +316,7 @@ def consume_tablature(input):
   if not input: return []
   
   if isinstance(input[0], StartOfTablature):
-    retval = Chorus(input.pop(0))
+    retval = Tablature(input.pop(0))
   else: 
     return []
 

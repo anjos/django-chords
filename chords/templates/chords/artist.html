@@ -5,18 +5,17 @@
 {{ block.super }}
 {% endblock %}
 
-{% block title %}{% trans "Songs" %}{% endblock %}
+{% block title %}{% trans "Artist" %} "{{ object.name }}"{% endblock %}
 
 {% block content %}
 <div class="chords">
   <p class="navigation">
-  <span class="item"><a href="{% url admin:chords_song_changelist %}">{% trans "Manage songs" %}</a></span>
-  <span class="item"><a href="{% url admin:chords_song_add %}">{% trans "Add song" %}</a></span>
+  <span class="item"><a href="/admin/chords/artist/{{ object.id }}">{% trans "Manage artist" %}</a></span>
   <span class="item"><a href="{% url chords:view-artists %}">{% trans "View Artists" %}</a></span>
+  <span class="item"><a href="{% url chords:view-songs %}">{% trans "View Songs" %}</a></span>
   <span class="item"><a href="{% url chords:view-collections %}">{% trans "View Collections" %}</a></span>
   </p>
-  <p class="title">{% trans "Available Songs" %}</p>
-  <p>{% trans "From this page you have access to all uploaded songs." %}</p>
+  <p class="title">{% trans "Available Songs for" %} "{{ object.name }}"</p>
 
   {% ifnotequal pages.paginator.num_pages 1 %}
   <p class="pagination">pages: {% chords_paginator pages %}</p>
@@ -26,10 +25,7 @@
     <tr>
       <th>{% trans "Shortcuts" %}</th>
       <th>{% trans "Title" %} {% chords_sorter "title" %}</th>
-      <th>{% trans "Performer" %} {% chords_sorter "performer" %}</th>
-      <th>{% trans "Composer" %} {% chords_sorter "composer" %}</th>
       <th>{% trans "Tone" %} {% chords_sorter "tone" %}</th>
-      <th>{% trans "In Collections" %}</th>
       <th>{% trans "Updated" %} {% chords_sorter "updated" %}</th>
     </tr>
     {% for obj in pages.object_list %}
@@ -40,10 +36,7 @@
         <a href="{% url admin:chords_song_change obj.id %}" title="{% trans "edit this song" %}"><img src="http://media.andreanjos.org/icons/tango/16x16/apps/accessories-text-editor.png" width="16" height="16"/></a>
       </td>
       <td class="title"><a href="{% url chords:view-song obj.id %}" title="{% trans "Click here to access this song" %}">{{ obj.title }}</a></td>
-      <td class="performer">{{ obj.performer.name }}</td>
-      <td class="composer">{{ obj.composer.name }}</td>
       <td class="tone">{{ obj.get_tone_display }}</td>
-      <td class="collections">{{ obj.collection_set.count }}</td>
       <td class="date">{{ obj.updated|date:"D, d/b/Y H:i T" }} {% trans "by" %} {{ obj.user.first_name.capitalize }}</td>
     </tr>
     {% empty %}

@@ -1,0 +1,115 @@
+/* Style for chord pages */
+
+.chords p.title {
+  font-size: 1.4em;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+
+.chords p.tone {
+  font-style: italic;
+  margin-top: 0px;
+  padding-top: 0px;
+  color: #444;
+}
+
+.chords pre {
+  color: #444;
+}
+
+.chords pre.song .hashcomment, .chords pre.song .comment {
+  color: #aaa; 
+  font-style: italic;
+}
+
+.chords pre.song .chords {
+  color: #00a;
+  font-weight: bold;
+}
+
+.chords pre.song .chorus {
+  color: #a00;
+  font-weight: bold;
+}
+
+.chords pre.song .tablature {
+  color: #070;
+  font-weight: bold;
+}
+
+.chords p.song-performer {
+  height: 85px;
+  font-size: 30px;
+  color: #fff;
+  padding: 15px;
+  border-radius: 15px;
+  text-align: right;
+  margin-bottom: 0px;
+}
+
+.chords p.song-performer a:link, .chords p.song-performer a:visited {
+  text-decoration: none;
+  color: #fff;
+}
+
+.chords p.song-performer a:hover {
+  text-decoration: none;
+  color: #ff0;
+}
+
+.chords p.song-performer a:hover img {
+  border-color: #ff0;
+}
+
+.chords p.song-performer img {
+  border: 3px white solid;
+  border-radius: 3px;
+}
+
+.chords .info-bar {
+  border-bottom: 2px solid black;
+  padding: 8px;
+  padding-bottom: 30px;
+}
+
+.chords .info-bar img {
+  vertical-align: top;
+}
+
+.chords .info-bar .actions {
+  float: left;
+  font-size: 0.8em;
+  color: #aa4;
+  vertical-align: top;
+  padding: 2px;
+  margin: 0px;
+  font-family: verdana, arial, helvetica, sans;
+}
+
+.chords .info-bar .actions img {
+  width: 12;
+  height: 12;
+  vertical-align: middle;
+}
+
+.chords .info-bar .revision-info {
+  float: right;
+  font-size: 0.8em;
+  color: #4a4;
+  vertical-align: top;
+  padding: 2px;
+  margin: 0px;
+  font-family: verdana, arial, helvetica, sans;
+  font-style: italic;
+}
+
+.chords .info-bar .revision-info img {
+  width: 12;
+  height: 12;
+  vertical-align: middle;
+}
+
+.chords .info-bar .revision-info .revision-author {
+  font-weight: bold;
+}
+

@@ -12,8 +12,12 @@ from django.views.generic.simple import redirect_to
 urlpatterns = patterns('chords.views',
 
     url(r'^$', redirect_to, {'url': 'song/'}),
+    url(r'^artist/$', 'view_artists', name='view-artists'), 
+    url(r'^artist/(?P<artist_id>\d{1,4})/$', 'view_artist', name='view-artist'), 
     url(r'^song/$', 'view_songs', name='view-songs'), 
     url(r'^song/(?P<song_id>\d{1,4})/$', 'view_song', name='view-song'), 
+    url(r'^song/(?P<song_id>\d{1,4})/text/$', 'view_song_text',
+      name='view-song-text'), 
     url(r'^collection/$', 'view_collections', name='view-collections'), 
     url(r'^collection/(?P<collection_id>\d{1,4})/$', 'view_collection', name='view-collection'), 
   )

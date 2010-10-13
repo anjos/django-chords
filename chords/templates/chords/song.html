@@ -3,20 +3,32 @@
 
 {% block media %}
 {{ block.super }}
+  <link href="{{ MEDIA_URL }}chords/css/style.css" rel="stylesheet" type="text/css" media="screen" />
 {% endblock %}
 
 {% block title %}{{ object.title }} {% trans "in" %} {{ object.get_tone_display }}{% endblock %}
 
 {% block content %}
 <div class="chords">
+
   <p class="navigation">
-  <span class="item"><a href="{% url chords:view-songs %}">{% trans "View songs" %}</a></span>
-  <span class="item"><a href="/admin/chords/song/{{ object.id }}/">{% trans "Manage this song" %}</a></span>
+  <span class="item"><a href="{% url chords:view-songs %}">{% trans "View Songs" %}</a></span>
+  <span class="item"><a href="{% url chords:view-artists %}">{% trans "View Artists" %}</a></span>
+  <span class="item"><a href="{% url chords:view-collections %}">{% trans "View Collections" %}</a></span>
   </p>
+
+  <p class="song-performer" style="background-color: #{{ object.performer.color }}"><a href="{% url chords:view-artist object.performer.id %}" title="{% trans "Click here to view other songs by this artist." %}">{{ object.performer.name }} <img src="{{ object.performer.image.url }}" width="60" height="80" alt="[{% trans "photo of " %} {{ object.performer.name }}]"/></a></p>
+  <div class="info-bar">
+    <span class="actions">{% trans "actions: " %}
+      <a href="{% url chords:view-song-text object.id %}" title="{% trans "view original text file" %}"><img src="http://media.andreanjos.org/icons/tango/16x16/mimetypes/text-x-generic.png" width="16" height="16"/></a>
+      <a href="{% url admin:chords_song_change object.id %}" title="{% trans "edit this song" %}"><img src="http://media.andreanjos.org/icons/tango/16x16/apps/accessories-text-editor.png" width="16" height="16"/></a>
+    </span>
+    <span class="revision-info"><img src="http://media.andreanjos.org/icons/tango/16x16/emblems/emblem-system.png" alt="[!]"/> {% trans "Last revision by" %} <span class="revision-author">{{ object.user.first_name.capitalize }}</span> {% trans "on" %} <span class="revision-author">{{ object.updated|date:"d/b/Y" }}</span></span>
+  </div>
+
   <p class="title">{{ object.title }}</p>
-  {% if object.performer or object.composer %}<p class="artist">{% if object.performer %}{{ object.performer }} {% endif %}{% if object.composer %}({% trans "by" %} {{ object.composer }})</p>{% endif %}{% endif %}
-  <p class="tone">{% trans "In" %} {{ object.get_tone_display }}</p>
-  <p class="uploaded">{% trans "Revised by" %} {{ object.user.first_name.capitalize }} {% trans "on" %} {{ object.updated|date:"D, d/m/y" }}</p>
-  {% if object.collection_set.count %}<p class="collection">{% for k in object.collection_set.all %}<a href="{% url chords:view-collection k.id %}">{{ k.name }}</a>, {% endfor %}</p>{% endif %}
+  <p class="tone">{% trans "Tone" %}: {{ object.get_tone_display }}</p>
+  <pre class="song">{% autoescape off %}{% for i in object.items %}{{ i.as_html }}{% endfor %}{% endautoescape %}</pre>
+
 </div>
 {% endblock %}

@@ -6,14 +6,56 @@
 """Models for chords.
 """
 
-import os, datetime, hashlib
+import os, datetime, hashlib, re
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext, ugettext
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core.files.images import ImageFile
 
 from parser import syntax_analysis, parse
+
+def media(path):
+  return os.path.join(settings.MEDIA_ROOT, path)
+
+SPACE = re.compile(r'\s+')
+def strname(v): return SPACE.sub('', v.encode('ascii', 'ignore'))
+
+class Artist(models.Model):
+  """Defines an artist, a person that performs or composes songs."""
+
+  def upload_path(self, filename):
+    extension = os.path.splitext(filename)[1]
+    path = os.path.join('chords', 'artists', 'images')
+    if not os.path.exists(media(path)): os.makedirs(media(path))
+    path += strname(self.name) + extension.lower()
+    if os.path.exists(media(path)): unlink(media(path))
+    return path
+
+  name = models.CharField(_(u'Name'), help_text=_(u'You can write here the name of the artist.'), max_length=100, blank=False, null=False, unique=True)
+
+  color = models.CharField(_(u'Color'), max_length=3, help_text=_(u'The hexadecimal 3-digit color representation of this artist in the RGB format. Example: #fff for white, #000 for black or #f00 for pure red. Omit the "#" (hash mark) when you specify the color.'), null=False, blank=False)
+  
+  avatar = models.ImageField(_('Avatar'), upload_to=upload_path, help_text=_('Specify here the file that will be uploaded. This file should be a photo of the artist. The image has to be a portrait of 3x4 in one of the web-supported formats like JPEG or PNG.'), null=True, blank=True)
+
+  def _image(self):
+    """Returns the current avatar or the "unknown.jpg" stock image."""
+    if self.avatar: return self.avatar
+
+    path = os.path.join('chords', 'img', 'unknown.jpg')
+    f = ImageFile(open(media(path), 'rb'))
+    f.url = os.path.join(settings.MEDIA_URL, path) 
+    return f
+
+  image = property(_image)
+  
+  class Meta:
+    verbose_name = _(u"artist")
+    verbose_name_plural = _(u"artists")
+
+  def __unicode__(self):
+    return self.name
 
 class Song(models.Model):
   """A song with chords."""
@@ -65,30 +107,19 @@ class Song(models.Model):
 
   title = models.CharField(_(u'Title'), max_length=100, help_text=_(u'This song\'s title'), blank=False, null=False)
 
-  performer = models.CharField(_(u'Performer'), help_text=_(u'You can write here the name of the performer you took this version from.'), max_length=100, blank=True)
+  performer = models.ForeignKey(Artist, related_name='performer', null=False)
 
-  composer = models.CharField(_(u'Composer'), help_text=_(u'The original composer of this song'), max_length=100, blank=True)
+  composer = models.ForeignKey(Artist, related_name='composer', null=False)
 
-  year = models.PositiveSmallIntegerField(_(u'Year'), help_text=_(u'The year of composition.'), blank=True, null=True)
+  year = models.PositiveSmallIntegerField(_(u'Year'), help_text=_(u'The year of the composition or performance. You may leave this field blank if you do not know it.'), blank=True, null=True)
 
   tone = models.CharField(_(u'Tone'), help_text=_(u'The tone for this music'),
       max_length=3, choices=TONE_CHOICES, blank=False, null=False)
 
-  def upload_path(self, original):
-    """Tells the FileField how to choose a name for this file."""
-    hashable = self.title + self.performer + self.composer + self.tone
-    sha1 = hashlib.sha1(hashable.encode('ascii','ignore')).hexdigest()[:8]
-    path = os.path.join('chords', 'songs', sha1 + '.chord')
-    if os.path.exists(os.path.join(settings.MEDIA_ROOT, path)):
-      os.unlink(os.path.join(settings.MEDIA_ROOT, path))
-    return path
-
-  song = models.FileField(_(u'Song'), help_text=_(u'Upload the text file containing your song using this field. We use the "chordpro" textual format. Read the project documentation for more information on the format.'), null=False, blank=False, upload_to=upload_path)
+  song = models.TextField(_(u'Song'), max_length=12000, help_text=_(u'Put here the text lines describing this song. We use the "chordpro" textual format. Read the project documentation for more information on the format.'), null=False, blank=False)
 
   def save(self, *args, **kwargs):
-    self.song.open('rt')
-    syntax_analysis(parse(self.song.file)) #throws if any problems occur
-    self.song.seek(0)
+    syntax_analysis(parse(self.song)) #throws if any problems occur
     super(Song, self).save(*args, **kwargs)
 
   class Meta:
@@ -102,6 +133,14 @@ class Song(models.Model):
   def __unicode__(self):
     return ugettext(u'Song(%(title)s in %(tone)s)') % \
         {'title': self.title, 'tone': self.get_tone_display()}
+
+  def items(self):
+    return syntax_analysis(parse(self.song))
+
+  def by(self):
+    """Returns a nice arrangement for performer/composer"""
+    if self.performer == self.composer: return self.performer.name
+    return u'%s (%s)' % (self.performer.name, self.composer.name)
 
 class Collection(models.Model):
   """A collection of songs."""
