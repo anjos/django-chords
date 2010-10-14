@@ -16,7 +16,7 @@
   <span class="item"><a href="{% url chords:view-collections %}">{% trans "View Collections" %}</a></span>
   </p>
   <p class="title">{% trans "Available Songs" %}</p>
-  <p>{% trans "From this page you have access to all uploaded songs." %}</p>
+  <p>{% trans "From this page you have access to all uploaded songs. Optionally, you can click on the PDF icon by the end of this paragraph to download all songs in PDF format. " %} <a href="{% url chords:view-songbook-pdf %}" title="{% trans "download all songs available in PDF format" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a></p>
 
   {% ifnotequal pages.paginator.num_pages 1 %}
   <p class="pagination">pages: {% chords_paginator pages %}</p>
@@ -35,9 +35,10 @@
     {% for obj in pages.object_list %}
     <tr class="{% cycle "even" "odd" %}">
       <td class="shortcuts">
-        <a href="{% url chords:view-song obj.id %}" title="{% trans "view this song" %}"><img src="http://media.andreanjos.org/icons/tango/16x16/actions/go-home.png" width="16" height="16"/></a>
-        <a href="{% url chords:view-song-text obj.id %}" title="{% trans "view original text file" %}"><img src="http://media.andreanjos.org/icons/tango/16x16/mimetypes/text-x-generic.png" width="16" height="16"/></a>
-        <a href="{% url admin:chords_song_change obj.id %}" title="{% trans "edit this song" %}"><img src="http://media.andreanjos.org/icons/tango/16x16/apps/accessories-text-editor.png" width="16" height="16"/></a>
+        <a href="{% url chords:view-song obj.id %}" title="{% trans "view this song" %}"><img src="{% url media "chords/img/icons/16x16/home.png" %}" width="16" height="16"/></a>
+        <a href="{% url chords:view-song-pdf obj.id %}" title="{% trans "download song in PDF format" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a>
+        <a href="{% url chords:view-song-text obj.id %}" title="{% trans "view original text file" %}"><img src="{% url media "chords/img/icons/16x16/text.png" %}" width="16" height="16"/></a>
+        <a href="{% url admin:chords_song_change obj.id %}" title="{% trans "edit this song" %}"><img src="{% url media "chords/img/icons/16x16/edit.png" %}" width="16" height="16"/></a>
       </td>
       <td class="title"><a href="{% url chords:view-song obj.id %}" title="{% trans "Click here to access this song" %}">{{ obj.title }}</a></td>
       <td class="performer">{{ obj.performer.name }}</td>

@@ -12,6 +12,8 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.http import Http404, HttpResponse
 from django.db.models.sql.query import FieldError
 from django.db.models import Q
+from django.conf import settings as djset
+from django.contrib.sites.models import Site
 
 from models import *
 
@@ -104,12 +106,35 @@ def view_song(request, song_id, template_name="chords/song.html"):
                             {'object': Song.objects.get(id=song_id), },
                             context_instance=RequestContext(request))
 
-def view_song_text(request, song_id, template_name="chords/song.txt"):
+def view_song_text(request, song_id):
   """Views a specific song chordpro representation."""
   o = Song.objects.get(id=song_id)
   response = HttpResponse(o.song, mimetype='text/plain')
   response['Content-Disposition'] = 'attachment; filename=%s.txt' % \
       o.title.encode('ascii', 'ignore')
+  return response 
+
+def view_song_pdf(request, song_id):
+  """Views a specific song PDF representation."""
+  from reportlab.platypus import SimpleDocTemplate
+
+  o = Song.objects.get(id=song_id)
+
+  response = HttpResponse(mimetype='application/pdf')
+  response['Content-Disposition'] = 'attachment; filename=%s.pdf' % \
+      o.title.encode('ascii', 'ignore')
+
+  doc = SimpleDocTemplate(response)
+
+  doc.author = o.user.get_full_name() + u'<' + o.user.email + u'>' 
+  doc.title = o.title
+  doc.subject = ugettext(u'Lyrics and Chords')
+
+  story = o.pdf_story(doc)
+
+  doc.build(story, onFirstPage=o.pdf_page_template_first,
+      onLaterPages=o.pdf_page_template)
+
   return response 
 
 def view_collections(request, template_name="chords/collections.html"):
@@ -167,13 +192,112 @@ def view_collection(request, collection_id,
                             context_instance=RequestContext(request))
 
 
-def songbook(request, by, index=True, order='descending'):
+def view_songbook_pdf(request):
   """Returns a PDF book of all songs available in the website, in the requested
-  order. Options for "by" are: performer (or composer, if performer is empty),
-  when updated, when created. We sort in descending order unless stated
-  otherwise.
-  
-  The PDF should contain an index if possible!
+  order.   
   """
-  pass
+  from reportlab.platypus import BaseDocTemplate
 
+  objects = Song.objects.all()
+
+  # A get request determines the order. The default is -updated
+  try: 
+    order = request.GET.get('o', '-updated').strip()
+    objects = objects.order_by(order)
+  except FieldError:
+    raise Http404
+
+  response = HttpResponse(mimetype='application/pdf')
+  response['Content-Disposition'] = 'attachment; filename=songbook.pdf'
+
+  doc = BaseDocTemplate(response)
+
+  doc.author = djset.DEFAULT_FROM_EMAIL
+  doc.title = ugettext('Songs from %(site)s') % \
+      {'site': Site.objects.get_current().name}
+  doc.subject = ugettext(u'Lyrics and Chords Songbook')
+
+  bind_songbook(doc, objects)
+
+  return response 
+
+def view_artist_songbook_pdf(request, artist_id):
+  """Returns a PDF book of all songs available in the website, in the requested
+  order.   
+  """
+  from reportlab.platypus import BaseDocTemplate
+
+
+  artist = Artist.objects.get(id=artist_id)
+  objects = Song.objects.filter(Q(composer=artist)|Q(performer=artist))
+
+  # A get request determines the order. The default is -updated
+  try: 
+    order = request.GET.get('o', '-updated').strip()
+    objects = objects.order_by(order)
+  except FieldError:
+    raise Http404
+
+  response = HttpResponse(mimetype='application/pdf')
+  response['Content-Disposition'] = 'attachment; filename=%s.pdf' % \
+      collection.name.encode('ascii', 'ignore')
+
+  doc = BaseDocTemplate(response)
+
+  doc.author = djset.DEFAULT_FROM_EMAIL
+  doc.title = ugettext(u'Songbook of %(name)s') % {'name': artist.name}
+  doc.subject = ugettext(u'Lyrics and Chords Songbook')
+
+  bind_songbook(doc, objects)
+
+  return response 
+
+def view_collection_songbook_pdf(request, collection_id):
+  """Returns a PDF book of all songs available in the website, in the requested
+  order.   
+  """
+  from reportlab.platypus.tableofcontents import TableOfContents
+  from reportlab.platypus import NextPageTemplate, PageBreak
+  from pdf import SongBookTemplate, style
+
+  collection = Collection.objects.get(id=collection_id)
+  objects = collection.song.all()
+
+  # A get request determines the order. The default is -updated
+  try: 
+    order = request.GET.get('o', '-updated').strip()
+    objects = objects.order_by(order)
+  except FieldError:
+    raise Http404
+
+  response = HttpResponse(mimetype='application/pdf')
+  response['Content-Disposition'] = 'attachment; filename=%s.pdf' % \
+      collection.name.encode('ascii', 'ignore')
+
+  doc = SongBookTemplate(response)
+  doc.author = collection.owner.get_full_name() + u'<' + \
+      collection.owner.email + u'>' 
+  doc.title = collection.name
+  doc.subject = ugettext(u'Lyrics and Chords Songbook')
+
+  story = collection.pdf_cover_page()
+
+  #appends and prepares table of contents
+  story.append(NextPageTemplate('TOC'))
+  story.append(PageBreak())
+  story.append(TableOfContents())
+  story[-1].levelStyles[0] = style['toc-entry']
+  story[-1].dotsMinLevel = 0 #connecting dots
+
+  #adds the lyrics
+  objects = list(objects)
+  for o in objects:
+    o.pdf_add_page_template(doc)
+    story.append(NextPageTemplate(o.pdf_template_id()))
+    story.append(PageBreak())
+    story += o.pdf_story(doc)
+
+  #multi-pass builds are necessary to handle TOCs correctly
+  doc.multiBuild(story)
+
+  return response 

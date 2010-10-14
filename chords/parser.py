@@ -7,6 +7,98 @@
 """
 
 import re, codecs
+import pdf
+
+class Line:
+  """A line that contains information of some sort."""
+
+  def __init__(self, v, lineno):
+    self.lineno = lineno
+    self.value = v
+
+  def __str__(self):
+    return '%03d %s' % (self.lineno, self.value)
+
+  def as_html(self):
+    return u'<span class="line">%s</span>' % self.value
+
+  def as_pdf(self):
+    """A normal line just returns itself as PDF"""
+    return [self.value]
+
+  def as_flowable(self):
+    return pdf.XPreformatted(u'', pdf.style['verse'])
+
+class ChordLine(Line):
+  """A special category of line that contains chords."""
+
+  def __init__(self, v, lineno):
+    Line.__init__(self, v, lineno)
+    self.bare = LineParser.chord.sub('', self.value, re.UNICODE)
+    self.chords = []
+    subtract = 0 
+    for z in LineParser.chord.finditer(self.value):
+      self.chords.append((z.start()-subtract, z.groups()[0]))
+      subtract = z.end() + (z.end() - z.start()) - 2
+
+  def __str__(self):
+    cline = '    '
+    for c in self.chords: cline += (' '*c[0] + c[1].capitalize())
+    v = [cline, '%03d %s' % (self.lineno, self.bare)]
+    return '\n'.join(v)
+
+  def as_html(self):
+    cline = ''
+    for c in self.chords: cline += (' '*c[0] + c[1].capitalize())
+    v = u'<span class="chords">%s</span>\n' % cline
+    v += u'<span class="lyrics">%s</span>\n' % self.bare
+    return v 
+
+  def as_pdf(self):
+    """A chorded line will actually return 2 lines one with the chord and
+    a second one with the lyrics."""
+    cline = ''
+    for c in self.chords: cline += (' '*c[0] + c[1].capitalize())
+    cline = '<font color=#000088><b>' + cline + '</b></font>'
+    return [cline, self.bare]
+
+class EmptyLine:
+  """A line with nothing."""
+
+  def __init__(self, lineno):
+    self.lineno = lineno
+
+  def __str__(self):
+    return '%03d ' % (self.lineno,)
+  
+  def as_html(self):
+    return u'\n'
+
+  def as_pdf(self):
+    return [u'']
+
+  def as_flowable(self):
+    return pdf.XPreformatted(u'', pdf.style['verse'])
+
+class HashComment(EmptyLine):
+  """A hash comment is a line that starts with a # mark."""
+
+  def __init__(self, v, lineno):
+    EmptyLine.__init__(self, lineno)
+    self.comment = v
+
+  def __str__(self):
+    return '%03d %s' % (self.lineno, self.comment)
+
+  def as_html(self):
+    #v = u'<span class="hashcomment">%s</span>\n' % self.comment
+    return u'' 
+
+  def as_pdf(self):
+    return [self.comment]
+
+  def as_flowable(self):
+    return None
 
 class Verse:
   """A verse."""
@@ -33,6 +125,11 @@ class Verse:
 
   def as_html(self):
     return u'\n'.join([k.as_html() for k in self.lines])
+
+  def as_flowable(self):
+    data = []
+    for k in self.lines: data += k.as_pdf()
+    return pdf.XPreformatted('\n'.join(data), pdf.style['verse'])
 
 class Chorus(Verse):
   """A complete chorus entry."""
@@ -63,6 +160,11 @@ class Chorus(Verse):
     v += u'</span>'
     return u'\n' + v + u'\n'
 
+  def as_flowable(self):
+    data = []
+    for k in self.lines: data += k.as_pdf()
+    return pdf.XPreformatted('\n'.join(data), pdf.style['chorus'])
+
 class Tablature(Verse):
   """A complete tablature entry."""
 
@@ -92,37 +194,22 @@ class Tablature(Verse):
     v += u'</span>'
     return u'\n' + v + u'\n'
 
-class EmptyLine:
-  """A line with nothing."""
-
-  def __init__(self, lineno):
-    self.lineno = lineno
-
-  def __str__(self):
-    return '%03d ' % (self.lineno,)
-  
-  def as_html(self):
-    return u'\n'
-
-class HashComment(EmptyLine):
-  """A hash comment is a line that starts with a # mark."""
-
-  def __init__(self, v, lineno):
-    EmptyLine.__init__(self, lineno)
-    self.comment = v
-
-  def __str__(self):
-    return '%03d %s' % (self.lineno, self.comment)
-
-  def as_html(self):
-    v = u'<span class="hashcomment"># %s</span>\n' % self.comment
-    return v
+  def as_flowable(self):
+    data = []
+    for k in self.lines: data += k.as_pdf()
+    return pdf.XPreformatted('\n'.join(data), pdf.style['tablature'])
 
 class Command:
   """A generic command from chordpro."""
 
   def __init__(self, lineno):
     self.lineno = lineno
+
+  def as_pdf(self):
+    return []
+
+  def as_flowable(self):
+    return None
 
 class StartOfChorus(Command):
   """A start of chorus marker."""
@@ -173,6 +260,12 @@ class Comment(Command):
   def as_html(self):
     return u'<span class="comment">%s</span>\n' % self.value
 
+  def as_pdf(self):
+    return [u'<font color=#444444><i>' + self.value + '</i></font>']
+
+  def as_flowable(self):
+    return pdf.XPreformatted(self.value, pdf.style['comment'])
+
 class UnsupportedCommand(Command):
   """One of the chordpro commands we don't support."""
 
@@ -218,44 +311,6 @@ class CommandParser:
     
     #we don't do anything if the command is unsupported
     return HashComment('#' + v + ' [IGNORED]', lineno)
-
-class Line:
-  """A line that contains information of some sort."""
-
-  def __init__(self, v, lineno):
-    self.lineno = lineno
-    self.value = v
-
-  def __str__(self):
-    return '%03d %s' % (self.lineno, self.value)
-
-  def as_html(self):
-    return u'<span class="line">%s</span>' % self.value
-
-class ChordLine(Line):
-  """A special category of line that contains chords."""
-
-  def __init__(self, v, lineno):
-    Line.__init__(self, v, lineno)
-    self.bare = LineParser.chord.sub('', self.value, re.UNICODE)
-    self.chords = []
-    subtract = 0 
-    for z in LineParser.chord.finditer(self.value):
-      self.chords.append((z.start()-subtract, z.groups()[0]))
-      subtract = z.end() + (z.end() - z.start()) - 2
-
-  def __str__(self):
-    cline = '    '
-    for c in self.chords: cline += (' '*c[0] + c[1].capitalize())
-    v = [cline, '%03d %s' % (self.lineno, self.bare)]
-    return '\n'.join(v)
-
-  def as_html(self):
-    cline = ''
-    for c in self.chords: cline += (' '*c[0] + c[1].capitalize())
-    v = u'<span class="chords">%s</span>\n' % cline
-    v += u'<span class="lyrics">%s</span>\n' % self.bare
-    return v 
 
 class LineParser:
 

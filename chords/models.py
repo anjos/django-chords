@@ -50,6 +50,21 @@ class Artist(models.Model):
 
   image = property(_image)
   
+  def pdf_color(self):
+   """Returns the equivalent reportlab Color object from the artist color."""
+
+   from reportlab.lib.colors import Color
+   red = int(self.color[0], 16)/16.0
+   if red < 0: red = 0
+   elif red > 1: red = 1
+   green = int(self.color[1], 16)/16.0
+   if green < 0: green = 0
+   elif green > 1: green = 1
+   blue = int(self.color[2], 16)/16.0
+   if blue < 0: blue = 0
+   elif blue > 1: blue = 1
+   return Color(red, green, blue, 1)
+
   class Meta:
     verbose_name = _(u"artist")
     verbose_name_plural = _(u"artists")
@@ -142,6 +157,130 @@ class Song(models.Model):
     if self.performer == self.composer: return self.performer.name
     return u'%s (%s)' % (self.performer.name, self.composer.name)
 
+  def pdf_basic_page(self, canvas, doc):
+    """Sets elements that are common to all song PDF pages in django-chords."""
+
+    from reportlab.lib.colors import Color
+    from reportlab.lib.units import cm
+    
+    # draws the rectangle with the performer name and picture
+    # remember: coordinates (0,0) start at bottom left and go up and to the
+    # right!
+    canvas.setFillColor(self.performer.pdf_color())
+    page_height = doc.bottomMargin + doc.height + doc.topMargin
+    page_width = doc.leftMargin + doc.width + doc.rightMargin
+    y = page_height - doc.topMargin + 0.2*cm # a bit above the top margin
+    rect_height = page_height - y
+    canvas.rect(0, y, page_width, rect_height, fill=True, stroke=False) 
+
+    image = self.performer.image
+    image_height = 100 
+    image_width = (image_height/float(image.height)) * image.width 
+    padding = 0.5*cm
+    image_x = page_width - image_width - padding
+    image_y = page_height - padding - image_height 
+    border = 4
+    canvas.setFillGray(1)
+    canvas.setStrokeGray(0.8)
+    canvas.roundRect(image_x-border, image_y-border, image_width + (2*border),
+        image_height + (2*border), radius=border/2, fill=True, stroke=True)
+    canvas.drawImage(image.name, image_x, image_y, width=image_width,
+        height=image_height, mask=None)
+
+    name = canvas.beginText()
+    name.setTextOrigin(doc.leftMargin+0.2*cm, y+0.4*cm)
+    name.setFont('Times-Roman', 20)
+    name.setFillGray(1)
+    name.textLine(self.performer.name)
+    canvas.drawText(name)
+
+    revision = canvas.beginText()
+    revision.setTextOrigin(doc.leftMargin, doc.bottomMargin-cm)
+    revision.setFont('Times-Italic', 9)
+    revision.setFillColor(Color(0, 0.4, 0, 1))
+    revision.textLine(ugettext(u'%(who)s on %(when)s') % \
+        {'who': self.user.first_name.capitalize(),
+         'when': self.updated.strftime('%a, %d/%b/%Y')}
+        )
+    canvas.drawText(revision)
+
+  def pdf_template_id(self):
+    return 'SongTemplate-%d'  % self.id
+
+  def pdf_add_page_template(self, doc):
+    """Adds my own page template to the document."""
+    from reportlab.platypus.frames import Frame
+    from reportlab.platypus.doctemplate import PageTemplate
+
+    doc._calc() #taken from reportlab source code (magic)
+
+    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height,
+        id='normal')
+    template = [PageTemplate(id='FirstPageSongTemplate', frames=frame, 
+      onPage=self.pdf_page_template_first, pagesize=doc.pagesize)]
+    template = [PageTemplate(id=self.pdf_template_id(), frames=frame, 
+      onPage=self.pdf_page_template, pagesize=doc.pagesize)]
+    doc.addPageTemplates(template)
+
+  def pdf_page_template_first(self, canvas, doc):
+    """If the song is printed alone, the first page is special."""
+
+    canvas.saveState()
+    self.pdf_basic_page(canvas, doc)
+    canvas.restoreState()
+
+  def pdf_page_template(self, canvas, doc):
+    """Creates a personalized PDF page view for this song."""
+
+    from reportlab.lib.units import cm
+    from pdf import page_circle_center
+
+    canvas.saveState()
+
+    self.pdf_basic_page(canvas, doc)
+
+    # Draws song name and page number
+    title = canvas.beginText()
+    title.setTextOrigin(doc.leftMargin + doc.width/2, doc.bottomMargin-cm)
+    title.setFont('Times-Roman', 9)
+    title.setFillGray(0.2)
+    title.textLine(u"%s" % (self.title))
+    page_x = doc.width+doc.rightMargin+0.5*cm
+    page_y = doc.bottomMargin-cm
+    page_fontsize = 11 
+    page = canvas.beginText()
+    page.setTextOrigin(page_x, page_y)
+    page.setFont('Helvetica-Bold', page_fontsize)
+    page.setFillGray(1)
+    page_number = doc.page
+    page.textLine('%d' % page_number)
+
+    #circle around number
+    canvas.setFillColor(self.performer.pdf_color())
+    circle_x, circle_y = page_circle_center(page_x, page_y,
+        page_fontsize, page_number)
+    canvas.circle(circle_x, circle_y, 1.5*page_fontsize, fill=True,
+        stroke=False)
+    
+    canvas.drawText(title)
+    canvas.drawText(page)
+
+    canvas.restoreState() 
+
+  def pdf_story(self, doc):
+    """Writes itself as a PDF story."""
+  
+    from pdf import Spacer, Paragraph, style, fontsize, tide
+
+    story = [Paragraph(self.title, style['song-title'])]
+    story.append(Paragraph(ugettext(u'Tone') + ': ' + self.get_tone_display(), 
+      style['tone']))
+    story.append(Spacer(1, fontsize))
+    story += [k.as_flowable() for k in self.items()]
+    story = [k for k in story if k]
+
+    return tide(story, doc)
+
 class Collection(models.Model):
   """A collection of songs."""
 
@@ -174,3 +313,13 @@ class Collection(models.Model):
   def last_update(self):
     """Returns the last updated song on this collection."""
     return self.song.order_by('-updated')[0]
+
+  def pdf_cover_page(self):
+    """Bootstraps our PDF sequence of flowables."""
+    from pdf import style
+    from reportlab.platypus import Paragraph, Spacer, PageBreak
+    ### CONTINUAR DESENVOLVENDO A PAGINA FRONTAL
+    story = []
+    story.append(Paragraph(ugettext(u'<i>Songbook</i> <b>%(name)s</b>') % \
+        {'name': self.name}, style['cover-title']))
+    return story

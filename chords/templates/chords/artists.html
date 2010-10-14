@@ -33,8 +33,9 @@
     {% for obj in pages.object_list %}
     <tr class="{% cycle "even" "odd" %}">
       <td class="shortcuts">
-        <a href="{% url chords:view-artist obj.id %}" title="{% trans "view this artist's page" %}"><img src="http://media.andreanjos.org/icons/tango/16x16/actions/go-home.png" width="16" height="16"/></a>
-        <a href="{% url admin:chords_artist_change obj.id %}" title="{% trans "edit this artist" %}"><img src="http://media.andreanjos.org/icons/tango/16x16/apps/accessories-text-editor.png" width="16" height="16"/></a>
+        <a href="{% url chords:view-artist obj.id %}" title="{% trans "view this artist's page" %}"><img src="{% url media "chords/img/icons/16x16/home.png" %}" width="16" height="16"/></a>
+        <a href="{% url chords:view-artist-songbook-pdf obj.id %}" title="{% trans "download a PDF containing all songs attributed to this artist" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a>
+        <a href="{% url admin:chords_artist_change obj.id %}" title="{% trans "edit this artist" %}"><img src="{% url media "chords/img/icons/16x16/edit.png" %}" width="16" height="16"/></a>
       </td>
       <td class="name"><a href="{% url chords:view-artist obj.id %}" title="{% trans "Click here to access the page from this artist" %}">{{ obj.name }} <img src="{{ obj.image.url }}" width="12" height="16" alt="[{% trans "photo of" %} {{ obj.name }}]" title="{{ obj.name }}"/></a></td>
       <td class="color" style="color: #{{ obj.color }}">#{{ obj.color.lower }}</td>
