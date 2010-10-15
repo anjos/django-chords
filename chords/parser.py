@@ -78,7 +78,7 @@ class EmptyLine:
     return [u'']
 
   def as_flowable(self):
-    return pdf.XPreformatted(u'', pdf.style['verse'])
+    return pdf.XPreformatted(u'<br/>', pdf.style['verse'])
 
 class HashComment(EmptyLine):
   """A hash comment is a line that starts with a # mark."""
