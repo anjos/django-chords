@@ -14,7 +14,9 @@ from reportlab.platypus import BaseDocTemplate
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.colors import Color
 from reportlab.lib.pagesizes import A4
+from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT, TA_RIGHT 
 
+from django.contrib.sites.models import Site
 from django.utils.translation import ungettext, ugettext
 
 style = {}
@@ -32,7 +34,15 @@ style['normal'] = ParagraphStyle(name='normal',
 style['cover-title'] = ParagraphStyle(name='cover-title', 
                                 parent=style['normal'],
                                 fontSize=3 * fontsize,
+                                alignment=TA_CENTER,
                                 leading=int(3.6 * fontsize))
+
+style['cover-subtitle'] = ParagraphStyle(name='cover-subtitle', 
+                                         parent=style['normal'],
+                                         fontSize=1.8 * fontsize,
+                                         textColor = Color(0.3, 0.3, 0.3, 1),
+                                         alignment=TA_CENTER,
+                                         leading=int(3.6 * fontsize))
 
 style['toc-entry'] = ParagraphStyle(name='toc-entry', 
                                     parent=style['normal'],
@@ -111,7 +121,31 @@ def page_circle_center(x, y, fontsize, value):
   return x+2*fontsize, y+0.35*fontsize
 
 def cover_page(canvas, doc):
+  """Defines the cover page layout."""
+
+  from reportlab.lib.units import cm
+
   canvas.saveState()
+
+  # draws the rectangle with the site name in vertical form
+  # remember: coordinates (0,0) start at bottom left and go up and to the
+  # right!
+  canvas.setFillGray(0)
+  page_height = doc.bottomMargin + doc.height + doc.topMargin
+  page_width = doc.leftMargin + doc.width + doc.rightMargin
+  x = page_width - doc.leftMargin
+  rect_width = page_width - x 
+  canvas.rect(x, 0, rect_width, page_height, fill=True, stroke=False) 
+
+  canvas.rotate(90)
+  t = canvas.beginText()
+  font_size = 20 
+  t.setTextOrigin(doc.bottomMargin, -x-font_size-2)
+  t.setFont('Times-Bold', font_size)
+  t.setFillGray(0.75)
+  t.textLine(u"http://%s" % (Site.objects.get_current().domain))
+  canvas.drawText(t)
+
   canvas.restoreState()
 
 def toc_page(canvas, doc):
@@ -131,7 +165,7 @@ def toc_page(canvas, doc):
   canvas.rect(0, y, page_width, rect_height, fill=True, stroke=False) 
 
   name = canvas.beginText()
-  name.setTextOrigin(doc.leftMargin+0.2*cm, y+0.4*cm)
+  name.setTextOrigin(doc.leftMargin, y+0.4*cm)
   name.setFont('Helvetica-Bold', 20)
   name.setFillGray(1)
   name.textLine(ugettext(u'Table of Contents'))
@@ -195,14 +229,14 @@ def set_basic_templates(doc):
   templates = []
 
   #the front page framing
-  cover_frame = Frame(doc.leftMargin, doc.bottomMargin+10*cm, 
-      doc.width, doc.height/2.0, id='cover')
+  cover_frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height,
+      leftPadding=0, rightPadding=10, topPadding=3*cm, bottomPadding=5*cm)
   templates.append(PageTemplate(id='Cover', frames=cover_frame,
     onPage=cover_page, pagesize=doc.pagesize))
 
-  #normal frame, for every page
+  #normal frame, for the TOC
   frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height,
-      id='normal')
+      id='normal', rightPadding=0, leftPadding=0)
   templates.append(PageTemplate(id='TOC', frames=frame, onPage=toc_page,
     pagesize=doc.pagesize))
   
@@ -223,3 +257,30 @@ class SongBookTemplate(BaseDocTemplate):
       key = 'song-title-%s' % self.seq.nextf('song-title')
       self.canv.bookmarkPage(key)
       self.notify('TOCEntry', (0, flowable.getPlainText(), self.page, key)) 
+
+
+def pdf_cover_page(songs, request):
+  """Bootstraps our PDF sequence of flowables."""
+  from pdf import style
+  from reportlab.platypus import Paragraph, Spacer, PageBreak
+  from reportlab.lib.units import cm
+  from time import strftime
+
+  story = []
+  story.append(Paragraph(ugettext(u'<i>Chordbook</i><br/><b>%(site)s</b>') % \
+      {'site': Site.objects.get_current().name}, style['cover-title']))
+  story.append(Spacer(1, 3*cm))
+
+  if songs.count():
+    update_date = songs.order_by('-updated')[0].updated.strftime('%a, %d/%b/%Y')
+  else:
+    update_date = u''
+  story.append(Paragraph(ugettext(u'Last update: <b>%(update)s</b><br/>%(url)s<br/>Downloaded on %(date)s') % \
+      {
+       'update': update_date,
+       'url': request.build_absolute_uri(),
+       'date': strftime('%a, %d/%b/%Y'),
+      },
+      style['cover-subtitle']))
+  return story
+

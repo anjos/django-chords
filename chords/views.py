@@ -196,7 +196,9 @@ def view_songbook_pdf(request):
   """Returns a PDF book of all songs available in the website, in the requested
   order.   
   """
-  from reportlab.platypus import BaseDocTemplate
+  from reportlab.platypus.tableofcontents import TableOfContents
+  from reportlab.platypus import NextPageTemplate, PageBreak
+  from pdf import SongBookTemplate, style, pdf_cover_page
 
   objects = Song.objects.all()
 
@@ -208,16 +210,33 @@ def view_songbook_pdf(request):
     raise Http404
 
   response = HttpResponse(mimetype='application/pdf')
-  response['Content-Disposition'] = 'attachment; filename=songbook.pdf'
+  response['Content-Disposition'] = 'attachment; filename=chordbook.pdf'
 
-  doc = BaseDocTemplate(response)
-
-  doc.author = djset.DEFAULT_FROM_EMAIL
-  doc.title = ugettext('Songs from %(site)s') % \
+  doc = SongBookTemplate(response)
+  doc.author = djset.DEFAULT_FROM_EMAIL 
+  doc.title = ugettext(u'Chordbook from %(site)s') % \
       {'site': Site.objects.get_current().name}
-  doc.subject = ugettext(u'Lyrics and Chords Songbook')
+  doc.subject = ugettext(u'Lyrics and Chords Book')
 
-  bind_songbook(doc, objects)
+  story = pdf_cover_page(objects, request)
+
+  #appends and prepares table of contents
+  story.append(NextPageTemplate('TOC'))
+  story.append(PageBreak())
+  story.append(TableOfContents())
+  story[-1].levelStyles[0] = style['toc-entry']
+  story[-1].dotsMinLevel = 0 #connecting dots
+
+  #adds the lyrics
+  objects = list(objects)
+  for o in objects:
+    o.pdf_add_page_template(doc)
+    story.append(NextPageTemplate(o.pdf_template_id()))
+    story.append(PageBreak())
+    story += o.pdf_story(doc)
+
+  #multi-pass builds are necessary to handle TOCs correctly
+  doc.multiBuild(story)
 
   return response 
 
@@ -225,8 +244,9 @@ def view_artist_songbook_pdf(request, artist_id):
   """Returns a PDF book of all songs available in the website, in the requested
   order.   
   """
-  from reportlab.platypus import BaseDocTemplate
-
+  from reportlab.platypus.tableofcontents import TableOfContents
+  from reportlab.platypus import NextPageTemplate, PageBreak
+  from pdf import SongBookTemplate, style
 
   artist = Artist.objects.get(id=artist_id)
   objects = Song.objects.filter(Q(composer=artist)|Q(performer=artist))
@@ -240,15 +260,32 @@ def view_artist_songbook_pdf(request, artist_id):
 
   response = HttpResponse(mimetype='application/pdf')
   response['Content-Disposition'] = 'attachment; filename=%s.pdf' % \
-      collection.name.encode('ascii', 'ignore')
+      artist.name.encode('ascii', 'ignore')
 
-  doc = BaseDocTemplate(response)
+  doc = SongBookTemplate(response)
+  doc.author = djset.DEFAULT_FROM_EMAIL 
+  doc.title = artist.name
+  doc.subject = ugettext(u'Lyrics and Chords Book')
 
-  doc.author = djset.DEFAULT_FROM_EMAIL
-  doc.title = ugettext(u'Songbook of %(name)s') % {'name': artist.name}
-  doc.subject = ugettext(u'Lyrics and Chords Songbook')
+  story = artist.pdf_cover_page(request)
 
-  bind_songbook(doc, objects)
+  #appends and prepares table of contents
+  story.append(NextPageTemplate('TOC'))
+  story.append(PageBreak())
+  story.append(TableOfContents())
+  story[-1].levelStyles[0] = style['toc-entry']
+  story[-1].dotsMinLevel = 0 #connecting dots
+
+  #adds the lyrics
+  objects = list(objects)
+  for o in objects:
+    o.pdf_add_page_template(doc)
+    story.append(NextPageTemplate(o.pdf_template_id()))
+    story.append(PageBreak())
+    story += o.pdf_story(doc)
+
+  #multi-pass builds are necessary to handle TOCs correctly
+  doc.multiBuild(story)
 
   return response 
 
@@ -278,9 +315,9 @@ def view_collection_songbook_pdf(request, collection_id):
   doc.author = collection.owner.get_full_name() + u'<' + \
       collection.owner.email + u'>' 
   doc.title = collection.name
-  doc.subject = ugettext(u'Lyrics and Chords Songbook')
+  doc.subject = ugettext(u'Lyrics and Chords Book')
 
-  story = collection.pdf_cover_page()
+  story = collection.pdf_cover_page(request)
 
   #appends and prepares table of contents
   story.append(NextPageTemplate('TOC'))

@@ -71,6 +71,44 @@ class Artist(models.Model):
 
   def __unicode__(self):
     return self.name
+  
+  def last_update(self):
+    """Returns the last updated song or this artist."""
+    as_performer = self.performer.order_by('-updated')
+    as_composer = self.composer.order_by('-updated')
+    if not as_performer.count() and as_composer.count(): 
+      return as_composer[0]
+    elif not as_composer.count() and as_performer.count():
+      return as_performer[0]
+    elif as_composer.count() and as_performer.count():
+      if as_composer[0].updated < as_performer[0].updated:
+        return as_performer[0]
+      else:
+        return as_composer[0]
+    return None
+
+  def pdf_cover_page(self, request):
+    """Bootstraps our PDF sequence of flowables."""
+    from pdf import style
+    from reportlab.platypus import Paragraph, Spacer, PageBreak
+    from reportlab.lib.units import cm
+    from time import strftime
+
+    story = []
+    story.append(Paragraph(ugettext(u'<i>Chordbook</i><br/><b>%(name)s</b>') % \
+        {'name': self.name}, style['cover-title']))
+    story.append(Spacer(1, 3*cm))
+    update_date = self.last_update()
+    if not update_date: update_date = u''
+    else: update_date = self.last_update().updated.strftime('%a, %d/%b/%Y')
+    story.append(Paragraph(ugettext(u'Last update: <b>%(update)s</b><br/>%(url)s<br/>Downloaded on %(date)s') % \
+        {
+         'update': update_date,
+         'url': request.build_absolute_uri(),
+         'date': strftime('%a, %d/%b/%Y'),
+        },
+        style['cover-subtitle']))
+    return story
 
 class Song(models.Model):
   """A song with chords."""
@@ -188,7 +226,7 @@ class Song(models.Model):
         height=image_height, mask=None)
 
     name = canvas.beginText()
-    name.setTextOrigin(doc.leftMargin+0.2*cm, y+0.4*cm)
+    name.setTextOrigin(doc.leftMargin, y+0.4*cm)
     name.setFont('Times-Roman', 20)
     name.setFillGray(1)
     name.textLine(self.performer.name)
@@ -215,7 +253,7 @@ class Song(models.Model):
     doc._calc() #taken from reportlab source code (magic)
 
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height,
-        id='normal')
+        id='normal', leftPadding=0, rightPadding=0)
     template = [PageTemplate(id='FirstPageSongTemplate', frames=frame, 
       onPage=self.pdf_page_template_first, pagesize=doc.pagesize)]
     template = [PageTemplate(id=self.pdf_template_id(), frames=frame, 
@@ -312,14 +350,29 @@ class Collection(models.Model):
 
   def last_update(self):
     """Returns the last updated song on this collection."""
-    return self.song.order_by('-updated')[0]
+    songs = self.song.order_by('-updated')
+    if not songs.count(): return None
+    return songs[0]
 
-  def pdf_cover_page(self):
+  def pdf_cover_page(self, request):
     """Bootstraps our PDF sequence of flowables."""
     from pdf import style
     from reportlab.platypus import Paragraph, Spacer, PageBreak
-    ### CONTINUAR DESENVOLVENDO A PAGINA FRONTAL
+    from reportlab.lib.units import cm
+    from time import strftime
+
     story = []
-    story.append(Paragraph(ugettext(u'<i>Songbook</i> <b>%(name)s</b>') % \
+    story.append(Paragraph(ugettext(u'<i>Chordbook</i><br/><b>%(name)s</b>') % \
         {'name': self.name}, style['cover-title']))
+    story.append(Spacer(1, 3*cm))
+    update_date = self.last_update().updated
+    if not update_date: update_date = self.updated
+    story.append(Paragraph(ugettext(u'<i>%(name)s</i>, last update: <b>%(update)s</b><br/>%(url)s<br/>Downloaded on %(date)s') % \
+        {
+         'name': self.owner.get_full_name(),
+         'update': update_date.strftime('%a, %d/%b/%Y'),
+         'url': request.build_absolute_uri(),
+         'date': strftime('%a, %d/%b/%Y'),
+        },
+        style['cover-subtitle']))
     return story
