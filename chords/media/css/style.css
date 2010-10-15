@@ -2,8 +2,11 @@
 
 .chords p.title {
   font-size: 1.4em;
-  margin-bottom: 0px;
-  padding-bottom: 0px;
+  margin-bottom: 5px;
+}
+
+.chords a img {
+  border: none;
 }
 
 .chords p.tone {

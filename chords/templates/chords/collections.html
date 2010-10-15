@@ -3,6 +3,7 @@
 
 {% block media %}
 {{ block.super }}
+  <link href="{% url media "chords/css/style.css" %}" rel="stylesheet" type="text/css" media="screen" />
 {% endblock %}
 
 {% block title %}{% trans "Collections" %}{% endblock %}

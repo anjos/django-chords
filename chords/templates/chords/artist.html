@@ -3,6 +3,7 @@
 
 {% block media %}
 {{ block.super }}
+  <link href="{% url media "chords/css/style.css" %}" rel="stylesheet" type="text/css" media="screen" />
 {% endblock %}
 
 {% block title %}{% trans "Artist" %} "{{ object.name }}"{% endblock %}
@@ -15,7 +16,7 @@
   <span class="item"><a href="{% url chords:view-songs %}">{% trans "View Songs" %}</a></span>
   <span class="item"><a href="{% url chords:view-collections %}">{% trans "View Collections" %}</a></span>
   </p>
-  <p class="title">{% trans "Available Songs for" %} "{{ object.name }}"</p>
+  <p class="title">{% trans "Available Songs for" %} "{{ object.name }}" <a href="{% url chords:view-artist-songbook-pdf object.id %}{{ getreq }}" title="{% trans "download all songs available for this artist in PDF format" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a></p>
 
   {% ifnotequal pages.paginator.num_pages 1 %}
   <p class="pagination">pages: {% chords_paginator pages %}</p>

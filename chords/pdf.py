@@ -284,3 +284,25 @@ def pdf_cover_page(songs, request):
       style['cover-subtitle']))
   return story
 
+def pdf_set_locale(request):
+  """setup language environment so the PDF is generated with good locale
+  settings. This bit of code was stolen from django.middleware.locale"""
+
+  import locale
+  from django.utils import translation
+
+  old_locale = locale.getlocale()
+
+  # this will try to get a language we support from the user preferences
+  try_language = translation.get_language_from_request(request)
+  # reparse to make a suitable format.
+  try_language = locale.normalize(try_language.replace('-','_'))
+  
+  new_locale = (try_language, old_locale[1])
+  
+  try:
+    locale.setlocale(locale.LC_ALL, new_locale)
+  except:
+    pass #we ignore problems setting the locale and leave the default
+
+  return old_locale

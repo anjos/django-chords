@@ -50,9 +50,11 @@ def view_artist(request, artist_id, template_name="chords/artist.html"):
   objects = Song.objects.filter(Q(composer=artist)|Q(performer=artist))
 
   # A get request determines the order. The default is -updated
+  getreq = u''
   try: 
     order = request.GET.get('o', '-updated').strip()
     objects = objects.order_by(order)
+    if request.GET.urlencode(): getreq = u'?%s' % request.GET.urlencode()
   except FieldError:
     raise Http404
 
@@ -68,6 +70,7 @@ def view_artist(request, artist_id, template_name="chords/artist.html"):
                             {
                               'object': artist,
                               'pages': pages, 
+                              'getreq': getreq,
                             },
                             context_instance=RequestContext(request))
 
@@ -78,9 +81,11 @@ def view_songs(request, template_name="chords/songs.html"):
   objects = Song.objects.all()
 
   # A get request determines the order. The default is -updated
+  getreq = u''
   try: 
     order = request.GET.get('o', '-updated').strip()
     objects = objects.order_by(order)
+    if request.GET.urlencode(): getreq = u'?%s' % request.GET.urlencode()
   except FieldError:
     raise Http404
 
@@ -95,6 +100,7 @@ def view_songs(request, template_name="chords/songs.html"):
   return render_to_response(template_name,
                             {
                               'pages': pages, 
+                              'getreq': getreq,
                             },
                             context_instance=RequestContext(request))
 
@@ -117,8 +123,13 @@ def view_song_text(request, song_id):
 def view_song_pdf(request, song_id):
   """Views a specific song PDF representation."""
   from reportlab.platypus import SimpleDocTemplate
-
+  from pdf import pdf_set_locale
+  import locale
+ 
   o = Song.objects.get(id=song_id)
+
+  # sets the locale so the dates and such get correctly printed
+  old_locale = pdf_set_locale(request)
 
   response = HttpResponse(mimetype='application/pdf')
   response['Content-Disposition'] = 'attachment; filename=%s.pdf' % \
@@ -134,6 +145,9 @@ def view_song_pdf(request, song_id):
 
   doc.build(story, onFirstPage=o.pdf_page_template_first,
       onLaterPages=o.pdf_page_template)
+
+  # restore default language
+  locale.setlocale(locale.LC_ALL, old_locale)
 
   return response 
 
@@ -170,9 +184,11 @@ def view_collection(request, collection_id,
   objects = collection.song.all()
 
   # A get request determines the order. The default is -updated
+  getreq = u''
   try: 
     order = request.GET.get('o', '-updated').strip()
     objects = objects.order_by(order)
+    if request.GET.urlencode(): getreq = u'?%s' % request.GET.urlencode()
   except FieldError:
     raise Http404
 
@@ -188,6 +204,7 @@ def view_collection(request, collection_id,
                             {
                               'object': collection,
                               'pages': pages, 
+                              'getreq': getreq,
                             },
                             context_instance=RequestContext(request))
 
@@ -198,7 +215,8 @@ def view_songbook_pdf(request):
   """
   from reportlab.platypus.tableofcontents import TableOfContents
   from reportlab.platypus import NextPageTemplate, PageBreak
-  from pdf import SongBookTemplate, style, pdf_cover_page
+  from pdf import SongBookTemplate, style, pdf_cover_page, pdf_set_locale
+  import locale
 
   objects = Song.objects.all()
 
@@ -208,6 +226,9 @@ def view_songbook_pdf(request):
     objects = objects.order_by(order)
   except FieldError:
     raise Http404
+
+  # sets the locale so the dates and such get correctly printed
+  old_locale = pdf_set_locale(request)
 
   response = HttpResponse(mimetype='application/pdf')
   response['Content-Disposition'] = 'attachment; filename=chordbook.pdf'
@@ -238,6 +259,9 @@ def view_songbook_pdf(request):
   #multi-pass builds are necessary to handle TOCs correctly
   doc.multiBuild(story)
 
+  # restore default language
+  locale.setlocale(locale.LC_ALL, old_locale)
+
   return response 
 
 def view_artist_songbook_pdf(request, artist_id):
@@ -246,7 +270,8 @@ def view_artist_songbook_pdf(request, artist_id):
   """
   from reportlab.platypus.tableofcontents import TableOfContents
   from reportlab.platypus import NextPageTemplate, PageBreak
-  from pdf import SongBookTemplate, style
+  from pdf import SongBookTemplate, style, pdf_set_locale
+  import locale
 
   artist = Artist.objects.get(id=artist_id)
   objects = Song.objects.filter(Q(composer=artist)|Q(performer=artist))
@@ -257,6 +282,9 @@ def view_artist_songbook_pdf(request, artist_id):
     objects = objects.order_by(order)
   except FieldError:
     raise Http404
+
+  # sets the locale so the dates and such get correctly printed
+  old_locale = pdf_set_locale(request)
 
   response = HttpResponse(mimetype='application/pdf')
   response['Content-Disposition'] = 'attachment; filename=%s.pdf' % \
@@ -287,6 +315,9 @@ def view_artist_songbook_pdf(request, artist_id):
   #multi-pass builds are necessary to handle TOCs correctly
   doc.multiBuild(story)
 
+  # restore default language
+  locale.setlocale(locale.LC_ALL, old_locale)
+
   return response 
 
 def view_collection_songbook_pdf(request, collection_id):
@@ -295,7 +326,8 @@ def view_collection_songbook_pdf(request, collection_id):
   """
   from reportlab.platypus.tableofcontents import TableOfContents
   from reportlab.platypus import NextPageTemplate, PageBreak
-  from pdf import SongBookTemplate, style
+  from pdf import SongBookTemplate, style, pdf_set_locale
+  import locale
 
   collection = Collection.objects.get(id=collection_id)
   objects = collection.song.all()
@@ -306,6 +338,9 @@ def view_collection_songbook_pdf(request, collection_id):
     objects = objects.order_by(order)
   except FieldError:
     raise Http404
+
+  # sets the locale so the dates and such get correctly printed
+  old_locale = pdf_set_locale(request)
 
   response = HttpResponse(mimetype='application/pdf')
   response['Content-Disposition'] = 'attachment; filename=%s.pdf' % \
@@ -336,5 +371,8 @@ def view_collection_songbook_pdf(request, collection_id):
 
   #multi-pass builds are necessary to handle TOCs correctly
   doc.multiBuild(story)
+
+  # restore default language
+  locale.setlocale(locale.LC_ALL, old_locale)
 
   return response 

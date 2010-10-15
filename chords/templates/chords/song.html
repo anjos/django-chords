@@ -3,7 +3,7 @@
 
 {% block media %}
 {{ block.super }}
-  <link href="{{ MEDIA_URL }}chords/css/style.css" rel="stylesheet" type="text/css" media="screen" />
+  <link href="{% url media "chords/css/style.css" %}" rel="stylesheet" type="text/css" media="screen" />
 {% endblock %}
 
 {% block title %}{{ object.title }} {% trans "in" %} {{ object.get_tone_display }}{% endblock %}
