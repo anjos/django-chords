@@ -11,7 +11,7 @@ from django.views.generic.simple import redirect_to
 
 urlpatterns = patterns('chords.views',
 
-    url(r'^$', redirect_to, {'url': 'song/'}),
+    url(r'^$', redirect_to, {'url': 'song/'}, name='index'),
     url(r'^pdf/$', 'view_songbook_pdf', name='view-songbook-pdf'), 
     url(r'^artist/$', 'view_artists', name='view-artists'), 
     url(r'^artist/(?P<artist_id>\d{1,4})/$', 'view_artist', name='view-artist'), 
