@@ -2,593 +2,574 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-15 11:07+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-10-15 11:37\n"
+"Last-Translator: Admin Adminston <admin@example.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
+"X-Translated-Using: django-rosetta 0.5.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: admin.py:21 admin.py:82 templates/chords/collections.html:31
 #: templates/chords/songs.html:8
 msgid "Songs"
-msgstr ""
+msgstr "Músicas"
 
 #: admin.py:32
 #, python-format
-msgid ""
-"Invalid avatar size (%(width)dx%(height)d). Avatars have to have a 3x4 "
-"(widthxheight) aspect ratio."
-msgstr ""
+msgid "Invalid avatar size (%(width)dx%(height)d). Avatars have to have a 3x4 (widthxheight) aspect ratio."
+msgstr "Avatar de tamanho inválido (%(width)dx%(height)d). Avatars devem ter um formato 3x4 (larguraxaltura)."
 
 #: admin.py:34
 #, python-format
 msgid "Invalid avatar '%(filename)s'. Cannot be opened by Django."
-msgstr ""
+msgstr "Avatar inválido '%(filename)s'. Não pode ser aberto pelo Django."
 
 #: admin.py:49 templates/chords/artists.html:8
 #: templates/chords/collections.html:8
 msgid "Collections"
-msgstr ""
+msgstr "Coleções"
 
 #: admin.py:67
 #, python-format
-msgid ""
-"Invalid file syntax. Either choose another file or fix the one you are "
-"trying to upload. Here is a hint: %(error)s"
-msgstr ""
+msgid "Invalid file syntax. Either choose another file or fix the one you are trying to upload. Here is a hint: %(error)s"
+msgstr "Sintaxe de arquivo inválida. Escolha um outro arquivo ou corrija aquele que está enviando. Aqui está uma dica: %(error)s"
 
 #: models.py:36 models.py:325 templates/chords/artists.html:28
 #: templates/chords/collections.html:28
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #: models.py:36
 msgid "You can write here the name of the artist."
-msgstr ""
+msgstr "Você deve colocar aqui o nome do artista"
 
 #: models.py:38 templates/chords/artists.html:29
 msgid "Color"
-msgstr ""
+msgstr "Cor"
 
 #: models.py:38
-msgid ""
-"The hexadecimal 3-digit color representation of this artist in the RGB "
-"format. Example: #fff for white, #000 for black or #f00 for pure red. Omit "
-"the \"#\" (hash mark) when you specify the color."
-msgstr ""
+msgid "The hexadecimal 3-digit color representation of this artist in the RGB format. Example: #fff for white, #000 for black or #f00 for pure red. Omit the \"#\" (hash mark) when you specify the color."
+msgstr "A cor em representação hexadecimal de 3 dígitos para este artista, seguindo o padrão RGB. Exemplo: #fff para branco, #000 para preto ou #f00 para vermelho puro. Omita a tralha (#) quando estiver especificando a cor."
 
 #: models.py:40
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
 #: models.py:40
-msgid ""
-"Specify here the file that will be uploaded. This file should be a photo of "
-"the artist. The image has to be a portrait of 3x4 in one of the web-"
-"supported formats like JPEG or PNG."
-msgstr ""
+msgid "Specify here the file that will be uploaded. This file should be a photo of the artist. The image has to be a portrait of 3x4 in one of the web-supported formats like JPEG or PNG."
+msgstr "Especifique aqui o arquivo que será enviado. Este arquivo deve conter uma foto do artista. A image deve ser um retrato no formato 3x4 em um formato suportado pela web tal como JPEG ou PNG."
 
 #: models.py:69
 msgid "artist"
-msgstr ""
+msgstr "artista"
 
 #: models.py:70
 msgid "artists"
-msgstr ""
+msgstr "artistas"
 
 #: models.py:98 models.py:365
 #, python-format
 msgid "<i>Chordbook</i><br/><b>%(name)s</b>"
-msgstr ""
+msgstr "<i>Chordbook</i><br/><b>%(name)s</b>"
 
 #: models.py:104 pdf.py:278
 #, python-format
 msgid "Last update: <b>%(update)s</b><br/>%(url)s<br/>Downloaded on %(date)s"
-msgstr ""
+msgstr "Última atualização: <b>%(update)s</b><br/>%(url)s<br/>Baixado em %(date)s"
 
 #: models.py:117
 msgid "A"
-msgstr ""
+msgstr "Lá"
 
 #: models.py:118
 msgid "A sharp"
-msgstr ""
+msgstr "Lá sustenido"
 
 #: models.py:119
 msgid "B flat"
-msgstr ""
+msgstr "Si bemol"
 
 #: models.py:120
 msgid "B"
-msgstr ""
+msgstr "Si"
 
 #: models.py:121
 msgid "C"
-msgstr ""
+msgstr "Dó"
 
 #: models.py:122
 msgid "C sharp"
-msgstr ""
+msgstr "C sustenido"
 
 #: models.py:123
 msgid "D flat"
-msgstr ""
+msgstr "Ré bemol"
 
 #: models.py:124
 msgid "D"
-msgstr ""
+msgstr "Ré"
 
 #: models.py:125
 msgid "D sharp"
-msgstr ""
+msgstr "Ré sustenido"
 
 #: models.py:126
 msgid "E flat"
-msgstr ""
+msgstr "Mi bemol"
 
 #: models.py:127
 msgid "E"
-msgstr ""
+msgstr "Mi"
 
 #: models.py:128
 msgid "F"
-msgstr ""
+msgstr "Fá"
 
 #: models.py:129
 msgid "F sharp"
-msgstr ""
+msgstr "Fá sustenido"
 
 #: models.py:130
 msgid "G flat"
-msgstr ""
+msgstr "Sol bemol"
 
 #: models.py:131
 msgid "G"
-msgstr ""
+msgstr "Sol"
 
 #: models.py:132
 msgid "G sharp"
-msgstr ""
+msgstr "Sol sustenido"
 
 #: models.py:133
 msgid "A flat"
-msgstr ""
+msgstr "Lá bemol"
 
 #: models.py:134
 msgid "A minor"
-msgstr ""
+msgstr "Lá menor"
 
 #: models.py:135
 msgid "A sharp minor"
-msgstr ""
+msgstr "Lá menor sustenido"
 
 #: models.py:136
 msgid "B flat minor"
-msgstr ""
+msgstr "Si menor bemol"
 
 #: models.py:137
 msgid "B minor"
-msgstr ""
+msgstr "Si menor"
 
 #: models.py:138
 msgid "C minor"
-msgstr ""
+msgstr "Dó menor"
 
 #: models.py:139
 msgid "C sharp minor"
-msgstr ""
+msgstr "Dó menor sustenido"
 
 #: models.py:140
 msgid "D flat minor"
-msgstr ""
+msgstr "Ré menor sustenido"
 
 #: models.py:141
 msgid "D minor"
-msgstr ""
+msgstr "Ré menor"
 
 #: models.py:142
 msgid "D sharp minor"
-msgstr ""
+msgstr "Ré menor sustenido"
 
 #: models.py:143
 msgid "E flat minor"
-msgstr ""
+msgstr "Mi menor bemol"
 
 #: models.py:144
 msgid "E minor"
-msgstr ""
+msgstr "Mi menor"
 
 #: models.py:145
 msgid "F minor"
-msgstr ""
+msgstr "Fá menor"
 
 #: models.py:146
 msgid "F sharp minor"
-msgstr ""
+msgstr "Fá menor sustenido"
 
 #: models.py:147
 msgid "G flat minor"
-msgstr ""
+msgstr "Sol menor bemol"
 
 #: models.py:148
 msgid "G minor"
-msgstr ""
+msgstr "Sol menor"
 
 #: models.py:149
 msgid "G sharp minor"
-msgstr ""
+msgstr "Sol menor sustenido"
 
 #: models.py:150
 msgid "A flat minor"
-msgstr ""
+msgstr "Lá menor bemol"
 
 #: models.py:155 models.py:327 templates/chords/collections.html:29
 msgid "Created"
-msgstr ""
+msgstr "Criado"
 
 #: models.py:158 models.py:330
 msgid "Last updated"
-msgstr ""
+msgstr "Atualizado"
 
 #: models.py:161 templates/chords/artist.html:27
 #: templates/chords/collection.html:27 templates/chords/songs.html:28
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #: models.py:161
 msgid "This song's title"
-msgstr ""
+msgstr "O título desta música"
 
 #: models.py:167
 msgid "Year"
-msgstr ""
+msgstr "Ano"
 
 #: models.py:167
-msgid ""
-"The year of the composition or performance. You may leave this field blank "
-"if you do not know it."
-msgstr ""
+msgid "The year of the composition or performance. You may leave this field blank if you do not know it."
+msgstr "O ano de composição ou interpretação. Você pode deixar este campo em branco se não souber a data."
 
 #: models.py:169 models.py:314 templates/chords/artist.html:28
 #: templates/chords/collection.html:30 templates/chords/song.html:31
 #: templates/chords/songs.html:31
 msgid "Tone"
-msgstr ""
+msgstr "Tom"
 
 #: models.py:169
 msgid "The tone for this music"
-msgstr ""
+msgstr "O tom em que está cifrada esta música."
 
 #: models.py:172
 msgid "Song"
-msgstr ""
+msgstr "Música"
 
 #: models.py:172
-msgid ""
-"Put here the text lines describing this song. We use the \"chordpro\" "
-"textual format. Read the project documentation for more information on the "
-"format."
-msgstr ""
+msgid "Put here the text lines describing this song. We use the \"chordpro\" textual format. Read the project documentation for more information on the format."
+msgstr "Coloque aqui as linhas descrevendo esta música. Nós usamos o formato texto \"chordpro\". Leia a documentação do projeto para mais informações sobre o formato."
 
 #: models.py:179
 msgid "song"
-msgstr ""
+msgstr "música"
 
 #: models.py:180
 msgid "songs"
-msgstr ""
+msgstr "músicas"
 
 #: models.py:187
 #, python-format
 msgid "Song(%(title)s in %(tone)s)"
-msgstr ""
+msgstr "Música(%(title)s em %(tone)s)"
 
 #: models.py:239
 #, python-format
 msgid "%(who)s on %(when)s"
-msgstr ""
+msgstr "%(who)s em %(when)s"
 
 #: models.py:325
 msgid "The name of this collection"
-msgstr ""
+msgstr "O nome desta coleção"
 
 #: models.py:338
 msgid "collection"
-msgstr ""
+msgstr "coleção"
 
 #: models.py:339
 msgid "collections"
-msgstr ""
+msgstr "coleções"
 
 #: models.py:342
 #, python-format
 msgid "Collection(%(name)s from %(owner)s, %(songs)d song)"
 msgid_plural "Collection(%(name)s from %(owner)s, %(songs)d songs)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Coleção(%(name)s de %(owner)s, %(songs)d música)"
+msgstr[1] "Coleção(%(name)s de %(owner)s, %(songs)d músicas)"
 
 #: models.py:370
 #, python-format
-msgid ""
-"<i>%(name)s</i>, last update: <b>%(update)s</b><br/>%(url)s<br/>Downloaded "
-"on %(date)s"
-msgstr ""
+msgid "<i>%(name)s</i>, last update: <b>%(update)s</b><br/>%(url)s<br/>Downloaded on %(date)s"
+msgstr "<i>%(name)s</i>, atualizado: <b>%(update)s</b><br/>%(url)s<br/>Baixado em %(date)s"
 
 #: pdf.py:171
 msgid "Table of Contents"
-msgstr ""
+msgstr "Tabela de Conteúdo"
 
 #: pdf.py:270
 #, python-format
 msgid "<i>Chordbook</i><br/><b>%(site)s</b>"
-msgstr ""
+msgstr "<i>Chordbook</i><br/><b>%(site)s</b>"
 
 #: views.py:131
 msgid "Lyrics and Chords"
-msgstr ""
+msgstr "Músicas e Cifras"
 
 #: views.py:217
 #, python-format
 msgid "Chordbook from %(site)s"
-msgstr ""
+msgstr "Chordbook de %(site)s"
 
 #: views.py:219 views.py:268 views.py:318
 msgid "Lyrics and Chords Book"
-msgstr ""
+msgstr "Livro de Músicas e Cifras"
 
 #: templates/chords/artist.html:8
 msgid "Artist"
-msgstr ""
+msgstr "Artista"
 
 #: templates/chords/artist.html:13
 msgid "Manage artist"
-msgstr ""
+msgstr "Gerenciar artista"
 
 #: templates/chords/artist.html:14 templates/chords/collection.html:15
 #: templates/chords/collections.html:15 templates/chords/song.html:16
 #: templates/chords/songs.html:15
 msgid "View Artists"
-msgstr ""
+msgstr "Ver Artistas"
 
 #: templates/chords/artist.html:15 templates/chords/artists.html:15
 #: templates/chords/collection.html:16 templates/chords/collections.html:16
 #: templates/chords/song.html:15
 msgid "View Songs"
-msgstr ""
+msgstr "Ver Músicas"
 
 #: templates/chords/artist.html:16 templates/chords/artists.html:16
 #: templates/chords/collection.html:14 templates/chords/song.html:17
 #: templates/chords/songs.html:16
 msgid "View Collections"
-msgstr ""
+msgstr "Ver Coleções"
 
 #: templates/chords/artist.html:18
 msgid "Available Songs for"
-msgstr ""
+msgstr "Músicas Disponíveis para"
 
 #: templates/chords/artist.html:26 templates/chords/artists.html:27
 #: templates/chords/collection.html:26 templates/chords/collections.html:27
 #: templates/chords/songs.html:27
 msgid "Shortcuts"
-msgstr ""
+msgstr "Atalhos"
 
 #: templates/chords/artist.html:29 templates/chords/collection.html:31
 #: templates/chords/songs.html:33
 msgid "Updated"
-msgstr ""
+msgstr "Atualizado"
 
 #: templates/chords/artist.html:34 templates/chords/collection.html:36
 #: templates/chords/songs.html:38
 msgid "view this song"
-msgstr ""
+msgstr "ver esta música"
 
 #: templates/chords/artist.html:35 templates/chords/collection.html:37
 #: templates/chords/song.html:23 templates/chords/songs.html:39
 msgid "download song in PDF format"
-msgstr ""
+msgstr "baixar música em formato PDF"
 
 #: templates/chords/artist.html:36 templates/chords/collection.html:38
 #: templates/chords/song.html:24 templates/chords/songs.html:40
 msgid "view original text file"
-msgstr ""
+msgstr "ver texto original"
 
 #: templates/chords/artist.html:37 templates/chords/collection.html:39
 #: templates/chords/song.html:25 templates/chords/songs.html:41
 msgid "edit this song"
-msgstr ""
+msgstr "editar esta música"
 
 #: templates/chords/artist.html:39 templates/chords/collection.html:41
 #: templates/chords/songs.html:43
 msgid "Click here to access this song"
-msgstr ""
+msgstr "Clique aqui para acessar esta música"
 
 #: templates/chords/artist.html:41 templates/chords/collection.html:45
 #: templates/chords/songs.html:48
 msgid "by"
-msgstr ""
+msgstr "por"
 
 #: templates/chords/artist.html:44 templates/chords/collection.html:48
 #: templates/chords/songs.html:51
 msgid "No songs uploaded so far."
-msgstr ""
+msgstr "Não há musicas no momento."
 
 #: templates/chords/artists.html:13
 msgid "Manage artists"
-msgstr ""
+msgstr "Gerenciar artistas"
 
 #: templates/chords/artists.html:14
 msgid "Add artist"
-msgstr ""
+msgstr "Adicionar artista"
 
 #: templates/chords/artists.html:18
 msgid "Available Artists"
-msgstr ""
+msgstr "Artistas Disponíveis"
 
 #: templates/chords/artists.html:19
 msgid "From this page you have access to all artists."
-msgstr ""
+msgstr "Nesta página você tem acesso a todos os artistas."
 
 #: templates/chords/artists.html:30
 msgid "Perfomer"
-msgstr ""
+msgstr "Intérprete"
 
 #: templates/chords/artists.html:31 templates/chords/collection.html:29
 #: templates/chords/songs.html:30
 msgid "Composer"
-msgstr ""
+msgstr "Compositor"
 
 #: templates/chords/artists.html:36
 msgid "view this artist's page"
-msgstr ""
+msgstr "ver a página do artista"
 
 #: templates/chords/artists.html:37
 msgid "download a PDF containing all songs attributed to this artist"
-msgstr ""
+msgstr "baixar um PDF contendo todas as músicas atribuídas a este artista"
 
 #: templates/chords/artists.html:38
 msgid "edit this artist"
-msgstr ""
+msgstr "editar este artista"
 
 #: templates/chords/artists.html:40
 msgid "Click here to access the page from this artist"
-msgstr ""
+msgstr "Clicar aqui para acessar a página deste artista"
 
 #: templates/chords/artists.html:40
 msgid "photo of"
-msgstr ""
+msgstr "foto de"
 
 #: templates/chords/artists.html:46 templates/chords/collections.html:48
 msgid "No collections created so far."
-msgstr ""
+msgstr "Não há coleções pelo instante."
 
 #: templates/chords/collection.html:8
 msgid "Collection"
-msgstr ""
+msgstr "Coleção"
 
 #: templates/chords/collection.html:13
 msgid "Manage collection"
-msgstr ""
+msgstr "Gerenciar coleção"
 
 #: templates/chords/collection.html:18
 msgid "Available Songs at collection"
-msgstr ""
+msgstr "Músicas disponíveis nesta coleção"
 
 #: templates/chords/collection.html:28 templates/chords/songs.html:29
 msgid "Performer"
-msgstr ""
+msgstr "Intérprete"
 
 #: templates/chords/collections.html:13
 msgid "Manage collections"
-msgstr ""
+msgstr "Gerenciar coleções"
 
 #: templates/chords/collections.html:14
 msgid "Add collection"
-msgstr ""
+msgstr "Adicionar coleção"
 
 #: templates/chords/collections.html:18
 msgid "Available Collections"
-msgstr ""
+msgstr "Coleções Disponíveis"
 
 #: templates/chords/collections.html:19
 msgid "From this page you have access to all collections."
-msgstr ""
+msgstr "Desta página você tem acesso à todas as coleções."
 
 #: templates/chords/collections.html:30
 msgid "Owner"
-msgstr ""
+msgstr "Dono"
 
 #: templates/chords/collections.html:32
 msgid "Last Update"
-msgstr ""
+msgstr "Última Atualização"
 
 #: templates/chords/collections.html:37
 msgid "view this collection"
-msgstr ""
+msgstr "ver esta coleção"
 
 #: templates/chords/collections.html:38
 msgid "download a PDF of this collection"
-msgstr ""
+msgstr "baixar um PDF contendo todas as músicas desta coleção"
 
 #: templates/chords/collections.html:39
 msgid "edit this collection"
-msgstr ""
+msgstr "editar esta coleção"
 
 #: templates/chords/collections.html:41
 msgid "Click here to access this collection"
-msgstr ""
+msgstr "Clicar aqui para acessar esta coleção"
 
 #: templates/chords/collections.html:45 templates/chords/song.html:9
 msgid "in"
-msgstr ""
+msgstr "em"
 
 #: templates/chords/paginator.html:5
 #, python-format
 msgid "go to page %(page)s"
-msgstr ""
+msgstr "ir à página %(page)s"
 
 #: templates/chords/song.html:20
 msgid "Click here to view other songs by this artist."
-msgstr ""
+msgstr "Clique aqui para ver outras músicas atribuídas a este artista."
 
 #: templates/chords/song.html:20
 msgid "photo of "
-msgstr ""
+msgstr "foto de"
 
 #: templates/chords/song.html:22
 msgid "actions: "
-msgstr ""
+msgstr "ações:"
 
 #: templates/chords/song.html:27
 msgid "Last revision by"
-msgstr ""
+msgstr "Última revisão por"
 
 #: templates/chords/song.html:27
 msgid "on"
-msgstr ""
+msgstr "em"
 
 #: templates/chords/songs.html:13
 msgid "Manage songs"
-msgstr ""
+msgstr "Gerenciar músicas"
 
 #: templates/chords/songs.html:14
 msgid "Add song"
-msgstr ""
+msgstr "Adicionar música"
 
 #: templates/chords/songs.html:18
 msgid "Available Songs"
-msgstr ""
+msgstr "Músicas Disponíveis"
 
 #: templates/chords/songs.html:19
-msgid ""
-"From this page you have access to all uploaded songs. Optionally, you can "
-"click on the PDF icon by the end of this paragraph to download all songs in "
-"PDF format. "
-msgstr ""
+msgid "From this page you have access to all uploaded songs. Optionally, you can click on the PDF icon by the end of this paragraph to download all songs in PDF format. "
+msgstr "Desta página você pode acessar todas as músicas disponibilizadas. Opcionalmente, você pode clicar no ícone PDF no final deste parágrafo para baixar todas as músicas em um songbook."
 
 #: templates/chords/songs.html:19
 msgid "download all songs available in PDF format"
-msgstr ""
+msgstr "baixar todas as músicas disponíveis em formato PDF"
 
 #: templates/chords/songs.html:32
 msgid "In Collections"
-msgstr ""
+msgstr "Coleções"
 
 #: templates/chords/sorter.html:4
 #, python-format
 msgid "Sort by %(what)s (ascending)"
-msgstr ""
+msgstr "Ordenar por %(what)s (ascendente)"
 
 #: templates/chords/sorter.html:7
 #, python-format
 msgid "Sort by %(what)s (descending)"
-msgstr ""
+msgstr "Ordenar por %(what)s (descendente)"
