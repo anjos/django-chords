@@ -6,6 +6,11 @@ admin=sw/bin/djm
 python=python
 project=../chords
 
+# a little hack for the messaging infrastructure
+LANGUAGES=en pt_BR fr es
+MAKE_MESSAGE=../test/$(admin) makemessages --all --extension=html,py,txt
+COMPILE_MESSAGE=../test/$(admin) compilemessages
+
 .PHONY: all generate_bootstrap bootstrap upgrade strings compile start shell smtp clean mrproper
 
 all:
@@ -23,10 +28,10 @@ upgrade:
 
 strings: bootstrap
 	@cd $(project); for l in $(LANGUAGES); do if [ ! -d locale/$$l ]; then mkdir -pv locale/$$l; fi; done;
-	@cd $(project) && ../$(MAKE_MESSAGE);
+	@cd $(project) && $(MAKE_MESSAGE);
 
 compile: bootstrap
-	@cd $(project) && ../$(COMPILE_MESSAGE);
+	@cd $(project) && $(COMPILE_MESSAGE);
 
 languages: strings compile
 
