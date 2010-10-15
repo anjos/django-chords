@@ -219,7 +219,7 @@ class Song(models.Model):
     canvas.setStrokeGray(0.8)
     canvas.roundRect(image_x-border, image_y-border, image_width + (2*border),
         image_height + (2*border), radius=border/2, fill=True, stroke=True)
-    canvas.drawImage(image.name, image_x, image_y, width=image_width,
+    canvas.drawImage(media(image.name), image_x, image_y, width=image_width,
         height=image_height, mask=None)
 
     name = canvas.beginText()
