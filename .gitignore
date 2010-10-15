@@ -4,7 +4,7 @@ sw
 installer/*.egg
 *.egg-info
 *.swp
-chords/media/songs
+chords/media/artists
 test/installer/bootstrap.py
 test/installer/ez_setup.py
 test/db.sql3

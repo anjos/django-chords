@@ -29,7 +29,7 @@ class Artist(models.Model):
     extension = os.path.splitext(filename)[1]
     path = os.path.join('chords', 'artists', 'images')
     if not os.path.exists(media(path)): os.makedirs(media(path))
-    path += strname(self.name) + extension.lower()
+    path += os.sep + strname(self.name) + extension.lower()
     if os.path.exists(media(path)): unlink(media(path))
     return path
 
@@ -178,9 +178,6 @@ class Song(models.Model):
   class Meta:
     verbose_name = _(u"song")
     verbose_name_plural = _(u"songs")
-
-    # please note that if you change the field bellow, you should revise 
-    # upload_path() above, to make sure we hold uniqueness for file names.
     unique_together = ('title', 'tone', 'performer', 'composer')
 
   def __unicode__(self):

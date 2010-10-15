@@ -27,11 +27,11 @@ class ArtistAdminForm(forms.ModelForm):
   def clean_avatar(self):
     if not self.cleaned_data["avatar"]: return self.cleaned_data["avatar"]
     try:
-      f = ImageFile(open(self.cleaned_data["avatar"], 'rb'))
+      f = ImageFile(self.cleaned_data["avatar"])
       if f.width != int(0.75 * f.height):
         raise forms.ValidationError, ugettext(u"Invalid avatar size (%(width)dx%(height)d). Avatars have to have a 3x4 (widthxheight) aspect ratio.") % {'width': f.width, 'height': f.height}
-    except TypeError:
-      raise forms.ValidationError, ugettext(u"Invalid avatar '%(filename)s'. Cannot be opened by Django.") % {'filename': self.cleaned_data["avatar"]}
+    except TypeError, e:
+      raise forms.ValidationError, ugettext(u"Invalid avatar '%(filename)s'. Cannot be opened by Django.") % {'filename': self.cleaned_data["avatar"].name}
     return self.cleaned_data["avatar"]
 
 class ArtistAdmin(admin.ModelAdmin):
