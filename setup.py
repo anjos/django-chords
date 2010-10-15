@@ -18,6 +18,11 @@ setup(
     package_data = {
       'chords': [
         'templates/chords/*.html',
+        'locale/*/LC_MESSAGES/*.po',
+        'locale/*/LC_MESSAGES/*.mo',
+        'media/css/*.css',
+        'media/img/*.jpg',
+        'media/img/icons/16x16/*.png',
         ],
       },
 
