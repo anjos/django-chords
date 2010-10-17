@@ -55,17 +55,16 @@ def top2chordpro():
   parsed = []
   for i, l in enumerate(lines):
     #print i, l.strip()
-    l = l.strip()
-    if not l: 
+    if not l.strip(): 
       parsed.append(Empty(i+1)) 
 
     elif False in [bool(CHORD_REGEXP.match(k)) for k in l.split()]:
       #cannot be a chord line
-      parsed.append(Line(l, i+1))
+      parsed.append(Line(l.rstrip(), i+1))
 
     else:
       #has to be a chord line
-      parsed.append(Chord(l, i+1))
+      parsed.append(Chord(l.rstrip(), i+1))
 
     #print parsed[-1]
   
