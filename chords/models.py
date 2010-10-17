@@ -1,7 +1,10 @@
 #!/usr/bin/env python
-# vim: set fileencoding=utf-8 :
+# vim: set fileencoding=latin-1 :
 # Andre Anjos <andre.anjos@idiap.ch>
 # Mon 04 Oct 2010 15:05:04 CEST 
+
+# A note on strftime: for PDF/unicode handling always decode the output of
+# that function with .decode('latin-1') or TypeErrors may occur.
 
 """Models for chords.
 """
@@ -100,12 +103,12 @@ class Artist(models.Model):
     story.append(Spacer(1, 3*cm))
     update_date = self.last_update()
     if not update_date: update_date = u''
-    else: update_date = self.last_update().updated.strftime('%a, %d/%b/%Y')
+    else: update_date = strftime('%a, %d/%b/%Y', self.last_update().updated.timetuple()).decode('latin-1')
     story.append(Paragraph(ugettext(u'Last update: <b>%(update)s</b><br/>%(url)s<br/>Downloaded on %(date)s') % \
         {
          'update': update_date,
          'url': request.build_absolute_uri(),
-         'date': strftime('%a, %d/%b/%Y'),
+         'date': strftime('%a, %d/%b/%Y').decode('latin-1'),
         },
         style['cover-subtitle']))
     return story
@@ -197,6 +200,7 @@ class Song(models.Model):
 
     from reportlab.lib.colors import Color
     from reportlab.lib.units import cm
+    from time import strftime
     
     # draws the rectangle with the performer name and picture
     # remember: coordinates (0,0) start at bottom left and go up and to the
@@ -235,7 +239,7 @@ class Song(models.Model):
     revision.setFillColor(Color(0, 0.4, 0, 1))
     revision.textLine(ugettext(u'%(who)s on %(when)s') % \
         {'who': self.user.first_name.capitalize(),
-         'when': self.updated.strftime('%a, %d/%b/%Y')}
+         'when': strftime('%a, %d/%b/%Y', self.updated.timetuple()).decode('latin-1')}
         )
     canvas.drawText(revision)
 
@@ -367,9 +371,9 @@ class Collection(models.Model):
     story.append(Paragraph(ugettext(u'<i>%(name)s</i>, last update: <b>%(update)s</b><br/>%(url)s<br/>Downloaded on %(date)s') % \
         {
          'name': self.owner.get_full_name(),
-         'update': update_date.strftime('%a, %d/%b/%Y'),
+         'update': strftime('%a, %d/%b/%Y', update_date.timetuple()).decode('latin-1'),
          'url': request.build_absolute_uri(),
-         'date': strftime('%a, %d/%b/%Y'),
+         'date': strftime('%a, %d/%b/%Y').decode('latin-1'),
         },
         style['cover-subtitle']))
     return story
