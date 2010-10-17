@@ -116,7 +116,7 @@ def view_song_text(request, song_id):
   """Views a specific song chordpro representation."""
   o = Song.objects.get(id=song_id)
   response = HttpResponse(o.song, mimetype='text/plain')
-  response['Content-Disposition'] = 'attachment; filename=%s.txt' % \
+  response['Content-Disposition'] = 'attachment; filename="%s.txt"' % \
       o.title.encode('ascii', 'ignore')
   return response 
 
@@ -132,7 +132,7 @@ def view_song_pdf(request, song_id):
   old_locale = pdf_set_locale(request)
 
   response = HttpResponse(mimetype='application/pdf')
-  response['Content-Disposition'] = 'attachment; filename=%s.pdf' % \
+  response['Content-Disposition'] = 'attachment; filename="%s.pdf"' % \
       o.title.encode('ascii', 'ignore')
 
   doc = SimpleDocTemplate(response)
@@ -231,7 +231,7 @@ def view_songbook_pdf(request):
   old_locale = pdf_set_locale(request)
 
   response = HttpResponse(mimetype='application/pdf')
-  response['Content-Disposition'] = 'attachment; filename=chordbook.pdf'
+  response['Content-Disposition'] = 'attachment; filename="chordbook.pdf"'
 
   doc = SongBookTemplate(response)
   doc.author = djset.DEFAULT_FROM_EMAIL 
@@ -287,7 +287,7 @@ def view_artist_songbook_pdf(request, artist_id):
   old_locale = pdf_set_locale(request)
 
   response = HttpResponse(mimetype='application/pdf')
-  response['Content-Disposition'] = 'attachment; filename=%s.pdf' % \
+  response['Content-Disposition'] = 'attachment; filename="%s.pdf"' % \
       artist.name.encode('ascii', 'ignore')
 
   doc = SongBookTemplate(response)
@@ -343,7 +343,7 @@ def view_collection_songbook_pdf(request, collection_id):
   old_locale = pdf_set_locale(request)
 
   response = HttpResponse(mimetype='application/pdf')
-  response['Content-Disposition'] = 'attachment; filename=%s.pdf' % \
+  response['Content-Disposition'] = 'attachment; filename="%s.pdf"' % \
       collection.name.encode('ascii', 'ignore')
 
   doc = SongBookTemplate(response)
