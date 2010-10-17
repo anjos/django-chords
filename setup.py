@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 setup(
 
     name = 'django-chords',
-    version = '0.1.7',
+    version = '0.1.8',
     packages = find_packages(),
 
     # we also need all translation files and templates
@@ -28,6 +28,7 @@ setup(
 
     entry_points = {
       'console_scripts': [
+        'chords_top2pro = chords.scripts.converter:top2chordpro',
         ],
       },
 
