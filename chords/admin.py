@@ -74,6 +74,7 @@ class SongAdmin(admin.ModelAdmin):
   ordering = ('-updated', 'title',)
   list_per_page = 20
   search_fields = ['title', 'performer', 'composer', 'year', 'tone', 'user']
+  save_on_top = True
 
 admin.site.register(Song, SongAdmin)
 
@@ -87,5 +88,6 @@ class CollectionAdmin(admin.ModelAdmin):
   ordering = ('-updated', 'name', 'owner')
   list_per_page = 20
   search_fields = ['name',]
+  filter_horizontal = ('song',)
 
 admin.site.register(Collection, CollectionAdmin)

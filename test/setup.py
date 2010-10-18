@@ -32,6 +32,7 @@ setup(
 
     install_requires = [
         'django-chords',
+        'django-rosetta',
       ],
 
     # metadata for upload to PyPI

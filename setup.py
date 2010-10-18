@@ -27,8 +27,8 @@ setup(
       },
 
     entry_points = {
-      'console_scripts': [
-        'chords_top2pro = chords.scripts.converter:top2chordpro',
+      'portal.scripts': [
+        'chords_top2pro.py = chords.scripts.converter:top2chordpro',
         ],
       },
 
@@ -37,7 +37,6 @@ setup(
     install_requires = [
       'Django>=1.2',
       'docutils',
-      'django-rosetta',
       'PIL',
       'reportlab',
       ],
