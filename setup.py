@@ -18,6 +18,7 @@ setup(
     package_data = {
       'chords': [
         'templates/chords/*.html',
+        'templates/admin/chords/*.html',
         'locale/*/LC_MESSAGES/*.po',
         'locale/*/LC_MESSAGES/*.mo',
         'media/css/*.css',
