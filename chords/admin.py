@@ -16,10 +16,6 @@ from models import *
 from parser import syntax_analysis, parse
 import codecs
 
-def count_songs(self):
-  return self.song_set.count()
-count_songs.short_description = _(u'Songs')
-
 class ArtistAdminForm(forms.ModelForm):
   class Meta:
     model = Artist
@@ -34,12 +30,28 @@ class ArtistAdminForm(forms.ModelForm):
       raise forms.ValidationError, ugettext(u"Invalid avatar '%(filename)s'. Cannot be opened by Django.") % {'filename': self.cleaned_data["avatar"].name}
     return self.cleaned_data["avatar"]
 
+def artist_image(self):
+  return '<div style="text-align:center"><img src="%s" height="64" width="48" title="%s"/></div>' % \
+      (self.image.url, self.name)
+artist_image.short_description = _(u'Image')
+artist_image.allow_tags = True
+
+def count_songs(self):
+  return '%d (%d)' % (self.performer.count(), self.composer.count())
+count_songs.short_description = _(u'Songs')
+
+def artist_color(self):
+  return '<div style="color:#fff;background-color:#%(color)s;width:48;height:48;border:solid 1px black;text-align:center;vertical-align:center">%(color)s</div>' \
+      % {'color': self.color}
+artist_color.short_description = _(u'Color')
+artist_color.allow_tags = True
+
 class ArtistAdmin(admin.ModelAdmin):
   form = ArtistAdminForm
-  list_display = ('name', 'color', 'avatar', count_songs)
+  list_display = ('name', artist_color, artist_image, count_songs)
   list_filter = ('color',)
   ordering = ('name', 'color',)
-  list_per_page = 20
+  list_per_page = 10
   search_fields = ['name', 'color',] 
 
 admin.site.register(Artist, ArtistAdmin)
