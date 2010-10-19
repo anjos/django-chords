@@ -8,10 +8,6 @@
 
 from setuptools import setup, find_packages
         
-django_scripts = [
-    'chords_top2pro.py = chords.scripts.converter:top2chordpro',
-    ]
-
 setup(
 
     name = 'django-chords',
@@ -31,8 +27,9 @@ setup(
       },
 
     entry_points = {
-      'console_scripts': django_scripts, #fallback to normal script if ever...
-      'portal.scripts': django_scripts,
+      'django.scripts': [
+        'chords_top2pro.py = chords.scripts.converter:top2chordpro',
+        ]
       },
 
     zip_safe=False,
