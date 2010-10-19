@@ -7,6 +7,10 @@
 """
 
 from setuptools import setup, find_packages
+        
+django_scripts = [
+    'chords_top2pro.py = chords.scripts.converter:top2chordpro',
+    ]
 
 setup(
 
@@ -27,9 +31,8 @@ setup(
       },
 
     entry_points = {
-      'portal.scripts': [
-        'chords_top2pro.py = chords.scripts.converter:top2chordpro',
-        ],
+      'console_scripts': django_scripts, #fallback to normal script if ever...
+      'portal.scripts': django_scripts,
       },
 
     zip_safe=False,
