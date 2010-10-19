@@ -16,6 +16,7 @@ from django.utils.translation import ungettext, ugettext
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.files.images import ImageFile
+from django.core.urlresolvers import reverse
 
 from parser import syntax_analysis, parse
 
@@ -113,6 +114,9 @@ class Artist(models.Model):
         style['cover-subtitle']))
     return story
 
+  def get_absolute_url(self):
+    return reverse('chords:view-artist', kwargs={'artist_id': self.id})
+
 class Song(models.Model):
   """A song with chords."""
 
@@ -184,8 +188,12 @@ class Song(models.Model):
     unique_together = ('title', 'tone', 'performer', 'composer')
 
   def __unicode__(self):
-    return ugettext(u'Song(%(title)s in %(tone)s)') % \
-        {'title': self.title, 'tone': self.get_tone_display()}
+    return ugettext(u'%(title)s in %(tone)s (%(performer)s)') % \
+        {
+         'title': self.title, 
+         'tone': self.get_tone_display(),
+         'performer': self.performer.name
+        }
 
   def items(self):
     return syntax_analysis(parse(self.song))
@@ -320,6 +328,9 @@ class Song(models.Model):
 
     return tide(story, doc)
 
+  def get_absolute_url(self):
+    return reverse('chords:view-song', kwargs={'song_id': self.id})
+
 class Collection(models.Model):
   """A collection of songs."""
 
@@ -377,3 +388,7 @@ class Collection(models.Model):
         },
         style['cover-subtitle']))
     return story
+  
+  def get_absolute_url(self):
+    return reverse('chords:view-collection', kwargs={'collection_id': self.id})
+
