@@ -40,16 +40,19 @@ class ChordLine(Line):
     for z in LineParser.chord.finditer(self.value):
       self.chords.append((z.start()-subtract, z.groups()[0]))
       subtract = z.end() + (z.end() - z.start()) - 2
+    for i, c in enumerate(self.chords[1:]):
+      # make sure the chords have at least 1 space between them.
+      if c[0] <= 0: self.chords[i+1] = (1, c[1])
 
   def __str__(self):
     cline = '    '
-    for c in self.chords: cline += (' '*c[0] + c[1].capitalize())
+    for c in self.chords: cline += (' '*c[0] + c[1])
     v = [cline, '%03d %s' % (self.lineno, self.bare)]
     return '\n'.join(v)
 
   def as_html(self):
     cline = ''
-    for c in self.chords: cline += (' '*c[0] + c[1].capitalize())
+    for c in self.chords: cline += (' '*c[0] + c[1])
     v = u'<span class="chords">%s</span>\n' % cline
     v += u'<span class="lyrics">%s</span>\n' % self.bare
     return v 
