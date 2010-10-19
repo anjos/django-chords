@@ -18,10 +18,10 @@ setup(
     package_data = {
       'chords': [
         'templates/chords/*.html',
-        'templates/admin/chords/*.html',
         'locale/*/LC_MESSAGES/*.po',
         'locale/*/LC_MESSAGES/*.mo',
         'media/css/*.css',
+        'media/js/*.js',
         'media/img/*.jpg',
         'media/img/icons/16x16/*.png',
         ],
