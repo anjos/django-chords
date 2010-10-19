@@ -1,4 +1,6 @@
-function top2chord_translate() {
+google.load("jquery", "1.3");
+
+function top2chord_translate(url) {
   function handleResponse(response, status) {
     $("#id_song").text(response);
   }

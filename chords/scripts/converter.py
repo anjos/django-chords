@@ -43,15 +43,7 @@ def combine(chord, line):
   #print '**', retval
   return retval
 
-def top2chordpro():
-  if len(sys.argv) != 2:
-    print 'usage: %s <filename.top>' % os.path.basename(sys.argv[0])
-    return 1
-
-  f = codecs.open(sys.argv[1], 'rt', encoding='utf-8')
-  lines = f.readlines()
-  f.close()
-
+def convert(lines):
   parsed = []
   for i, l in enumerate(lines):
     #print i, l.strip()
@@ -67,18 +59,30 @@ def top2chordpro():
       parsed.append(Chord(l.rstrip(), i+1))
 
     #print parsed[-1]
-  
+ 
+  retval = []
   waiting = None
   while parsed: #consume doublets.
     k = parsed.pop(0)
-    if isinstance(k, Empty): print ''
+    if isinstance(k, Empty): retval.append('')
     elif isinstance(k, Line):
       if waiting: 
-        print combine(waiting, k)
+        retval.append(combine(waiting, k))
         waiting = None
       else:
-        print k.value
+        retval.append(k.value)
     else: #has to be a chord line
-      if waiting: print waiting.value
+      if waiting: retval.append(waiting.value)
       waiting = k
 
+  return '\n'.join(retval)
+
+def top2chordpro():
+  if len(sys.argv) != 2:
+    print 'usage: %s <filename.top>' % os.path.basename(sys.argv[0])
+    return 1
+
+  f = codecs.open(sys.argv[1], 'rt', encoding='utf-8')
+  lines = f.readlines()
+  f.close()
+  print convert(lines)

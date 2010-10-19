@@ -14,6 +14,7 @@ from django.db.models.sql.query import FieldError
 from django.db.models import Q
 from django.conf import settings as djset
 from django.contrib.sites.models import Site
+from django.contrib.auth.decorators import login_required
 
 from models import *
 
@@ -375,4 +376,18 @@ def view_collection_songbook_pdf(request, collection_id):
   # restore default language
   locale.setlocale(locale.LC_ALL, old_locale)
 
+  return response 
+
+@login_required
+def translate_song_text(request):
+  """This script does a top chord notation to chordpro notation of a POST
+  request. It is meant to be used in a javascript POST request for automatic
+  admin form update.
+  """
+  if not request.method == "POST": raise Http404
+  if not request.POST.has_key('song'): raise Http404 
+  from scripts.converter import convert
+  converted = convert(request.POST['song'].split('\n'))
+  response = HttpResponse(converted, mimetype='text/plain')
+  response['Content-Disposition'] = 'attachment; filename="song.txt"'
   return response 
