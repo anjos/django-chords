@@ -71,6 +71,7 @@ class SongAdminForm(forms.ModelForm):
     css = {
         'screen': ('chords/css/admin.css',)
         }
+    js = ('chords/js/translate.js',)
     
   def clean_song(self):
     try:
