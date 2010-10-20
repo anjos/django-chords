@@ -7,6 +7,7 @@
 """
 
 from setuptools import setup, find_packages
+from djsetup import develop
 
 setup(
 
@@ -23,9 +24,19 @@ setup(
     entry_points = {
       'console_scripts': [
         'djm = scripts.manage:main',
+        ],
+      'django.settings': [
+        'settings = settings',
+        ],
+      'django.scripts': [
         'start_project.py = scripts.initial_data:main',
         'pdf.py = scripts.pdftest:main',
         ],
+      },
+
+    # replaces the "develop" target with my own, that extends it.
+    cmdclass = {
+      'develop': develop,
       },
 
     zip_safe=False,
