@@ -11,6 +11,8 @@ from django import forms
 from django.utils.translation import *
 from django.utils.translation import ugettext_lazy as _
 from django.core.files.images import ImageFile
+from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
 
 from models import *
 from parser import syntax_analysis, parse
@@ -60,18 +62,36 @@ def count_collections(self):
   return self.collection_set.count()
 count_collections.short_description = _(u'Collections')
 
+class ConvertTextarea(forms.widgets.Textarea):
+  def __init__(self, *args, **kwargs):
+    super(ConvertTextarea, self).__init__(*args, **kwargs)
+
+  def render(self, name, value, attrs=None):
+    if not attrs: attrs = {}
+    attrs['class'] = 'song-field-admin'
+    attrs['wrap'] = 'off'
+    v = super(ConvertTextarea, self).render(name, value, attrs)
+    v += u'<ul class="object-tools"><li><a class="viewsitelink" href="#" onclick="top2chord_translate(\'%(url)s\', \'#%(html_id)s\');" title="%(title)s">%(name)s</a></li></ul>' % \
+        {
+            'url': reverse('chords:translate-song-text'),
+            'html_id': attrs['id'],
+            'title': ugettext(u'Convert top-chord format into chordpro!'),
+            'name': ugettext(u'To chordpro'),
+        }
+    
+    return mark_safe(v)
+
 class SongAdminForm(forms.ModelForm):
+  song = forms.CharField(widget=ConvertTextarea, help_text=Song._meta.get_field_by_name('song')[0].help_text)
+
   class Meta:
     model = Song
-    widgets = {
-        'song': forms.Textarea(attrs={'class': 'song-field-admin', 'wrap': 'off'}),
-        }
-
+  
   class Media:
     css = {
         'screen': ('chords/css/admin.css',)
         }
-    js = ('chords/js/translate.js',)
+    js = ('http://www.google.com/jsapi', 'chords/js/translate.js',)
     
   def clean_song(self):
     try:

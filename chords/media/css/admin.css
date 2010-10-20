@@ -12,3 +12,16 @@ textarea.song-field-admin {
 
 textarea.song-field-admin:focus {
 }
+
+.convert-button  {
+  width: 4em;
+  height: 1.5em;
+  background-color: #700;
+  color: #fff;
+  border: 2px #500 solid;
+  padding: 3px;
+}
+
+.convert-button a {
+  color: #fff;
+}

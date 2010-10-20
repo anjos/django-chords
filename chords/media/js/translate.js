@@ -1,8 +1,8 @@
-google.load("jquery", "1.3");
+google.load("jquery", "1.4.3");
 
-function top2chord_translate(url) {
+function top2chord_translate(url, id) {
   function handleResponse(response, status) {
-    $("#id_song").text(response);
+    $(id).text(response);
   }
-  $.post(url, {song: $("#id_song").text()}, handleResponse, "text");
+  $.post('http://localhost:8080' + url, {song: $(id).val()}, handleResponse, "text");
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# vim: set fileencoding=latin-1 :
+# vim: set fileencoding=utf-8 :
 # Andre Anjos <andre.anjos@idiap.ch>
 # Mon 04 Oct 2010 15:05:04 CEST 
 
@@ -176,7 +176,7 @@ class Song(models.Model):
   tone = models.CharField(_(u'Tone'), help_text=_(u'The tone for this music'),
       max_length=3, choices=TONE_CHOICES, blank=False, null=False)
 
-  song = models.TextField(_(u'Song'), max_length=12000, help_text=_(u'Put here the text lines describing this song. We use the "chordpro" textual format (<a href="http://www.pmwiki.org/wiki/Cookbook/ChordPro-Format">reference here<a/>). Read the project documentation for more information on the format.'), null=False, blank=False)
+  song = models.TextField(_(u'Song'), max_length=12000, help_text=ugettext(u'Put here the text lines describing this song. We use the "chordpro" textual format (<a href="%(url)s">reference here</a>). Read the project documentation for more information on the format.') % {'url': 'http://www.pmwiki.org/wiki/Cookbook/ChordPro-Format'}, null=False, blank=False)
 
   def save(self, *args, **kwargs):
     syntax_analysis(parse(self.song)) #throws if any problems occur
