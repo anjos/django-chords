@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-20 10:23+0200\n"
+"POT-Creation-Date: 2010-10-23 07:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,7 +93,7 @@ msgstr ""
 msgid "artist"
 msgstr ""
 
-#: models.py:74
+#: models.py:74 templates/chords/artists.html:23
 msgid "artists"
 msgstr ""
 
@@ -296,7 +296,8 @@ msgstr ""
 msgid "song"
 msgstr ""
 
-#: models.py:187
+#: models.py:187 templates/chords/artist.html:22
+#: templates/chords/collection.html:22 templates/chords/songs.html:23
 msgid "songs"
 msgstr ""
 
@@ -318,7 +319,7 @@ msgstr ""
 msgid "collection"
 msgstr ""
 
-#: models.py:351
+#: models.py:351 templates/chords/collections.html:23
 msgid "collections"
 msgstr ""
 
@@ -390,6 +391,12 @@ msgstr ""
 
 #: templates/chords/artist.html:19
 msgid "download all songs available for this artist in PDF format"
+msgstr ""
+
+#: templates/chords/artist.html:22 templates/chords/artists.html:23
+#: templates/chords/collection.html:22 templates/chords/collections.html:23
+#: templates/chords/songs.html:23
+msgid "pages"
 msgstr ""
 
 #: templates/chords/artist.html:27 templates/chords/artists.html:28
@@ -520,7 +527,7 @@ msgid "Available Collections"
 msgstr ""
 
 #: templates/chords/collections.html:20
-msgid "From this page you have access to all collections."
+msgid "From this page you have access to all collections created so far."
 msgstr ""
 
 #: templates/chords/collections.html:31
@@ -593,7 +600,8 @@ msgid "download all songs available in PDF format"
 msgstr ""
 
 #: templates/chords/songs.html:20
-msgid "From this page you have access to all uploaded songs."
+#, python-format
+msgid "From this page you have access to all %(count)s uploaded songs."
 msgstr ""
 
 #: templates/chords/songs.html:33

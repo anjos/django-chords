@@ -20,7 +20,7 @@
   <p>{% trans "From this page you have access to all artists." %}</p>
 
   {% ifnotequal pages.paginator.num_pages 1 %}
-  <p class="pagination">pages: {% chords_paginator pages %}</p>
+  <p class="pagination">{{ pages.paginator.count }} {% trans "artists" %}, {% trans "pages" %}: {% chords_paginator pages %}</p>
   {% endifnotequal %}
 
   <table class="songs">

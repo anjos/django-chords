@@ -19,7 +19,7 @@
   <p class="title">{% trans "Available Songs at collection" %} "{{ object.name }}" <a href="{% url chords:view-collection-songbook-pdf object.id %}{{ getreq }}" title="{% trans "download all songs available at this collection in PDF format" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a></p> 
 
   {% ifnotequal pages.paginator.num_pages 1 %}
-  <p class="pagination">pages: {% chords_paginator pages %}</p>
+  <p class="pagination">{{ pages.paginator.count }} {% trans "songs" %}, {% trans "pages" %}: {% chords_paginator pages %}</p>
   {% endifnotequal %}
 
   <table class="songs">

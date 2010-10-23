@@ -17,10 +17,10 @@
   <span class="item"><a href="{% url chords:view-songs %}">{% trans "View Songs" %}</a></span>
   </p>
   <p class="title">{% trans "Available Collections" %}</p>
-  <p>{% trans "From this page you have access to all collections." %}</p>
+  <p>{% trans "From this page you have access to all collections created so far." %}</p>
 
   {% ifnotequal pages.paginator.num_pages 1 %}
-  <p class="pagination">pages: {% chords_paginator pages %}</p>
+  <p class="pagination">{{ pages.paginator.count }} {% trans "collections" %}, {% trans "pages" %}: {% chords_paginator pages %}</p>
   {% endifnotequal %}
 
   <table class="songs">

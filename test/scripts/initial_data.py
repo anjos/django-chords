@@ -44,20 +44,21 @@ def main():
   # This bit will load our chord examples
   Song.objects.all().delete()
   counter = 0
-  for ex in fnmatch.filter(os.listdir('examples'), '*.chord'):
-    f = open(os.path.join('examples', ex), 'rt')
-    s = Song()
-    s.user = admin
-    counter += 1
-    s.title = 'Song %d' % counter
-    s.performer = unknown 
-    s.composer = unknown
-    s.year = 2010
-    s.tone = 'A'
-    s.song = f.read()
-    s.save()
-    f.close()
-    print 'Created %s' % s
+  for repeat in range(10):
+    for ex in fnmatch.filter(os.listdir('examples'), '*.chord'):
+      f = open(os.path.join('examples', ex), 'rt')
+      s = Song()
+      s.user = admin
+      counter += 1
+      s.title = 'Song %d' % counter
+      s.performer = unknown 
+      s.composer = unknown
+      s.year = 2010
+      s.tone = 'A'
+      s.song = f.read()
+      s.save()
+      f.close()
+      print 'Created %s' % s
 
   # This bit will create 2 collections
   Collection.objects.all().delete()
