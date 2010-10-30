@@ -99,10 +99,15 @@ class SongAdminForm(forms.ModelForm):
     except SyntaxError, e:
       raise forms.ValidationError, ugettext(u"Invalid file syntax. Either choose another file or fix the one you are trying to upload. Here is a hint: %(error)s") % {'error': e}
     return self.cleaned_data["song"]
+
+def two_columns(obj):
+  return obj.two_columns
+two_columns.short_description = _(u'Two Columns')
+two_columns.boolean = True
     
 class SongAdmin(admin.ModelAdmin):
   form = SongAdminForm
-  list_display = ('title', 'performer', 'composer', 'year', 'tone', 'user', 'date', 'updated', count_collections)
+  list_display = ('title', 'performer', 'composer', 'year', 'tone', 'user', 'date', 'updated', count_collections, two_columns)
   list_filter = ('year', 'tone', 'user', 'date', 'updated')
   ordering = ('-updated', 'title',)
   list_per_page = 20
