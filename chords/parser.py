@@ -9,6 +9,52 @@
 import re, codecs
 import pdf
 
+def break_line(v, width):
+  """Breaks the line trying to respect the given width. Returns a tuple."""
+  retval = []
+  for k in v.split(u' '):
+    if not retval: 
+      retval.append(k)
+      continue
+    
+    #when you get here, retval is filled with at least one entry
+    
+    #adds the space we splitted before
+    if len(retval[-1]) < width: retval[-1] += u' '
+    else: retval.append(u' ')
+
+    #adds the next word
+    if len(retval[-1]) + len(k) <= width: retval[-1] += k
+    else: retval.append(k)
+
+  return [k.strip() for k in retval if k.strip()]
+
+def break_chordline(v, width):
+  """Does about the same as break_line() above, but breaks the chord lines in 
+  respecting chord positions relative to the lyrics lines."""
+
+  def clen(v):
+    """Calculates the length of v removing the chord entries."""
+    return len(LineParser.chord.sub('', v, re.UNICODE))
+
+  retval = []
+  for k in v.split(u' '):
+    if not retval:
+      retval.append(k)
+      continue
+
+    #when you get here, retval is filled with at least one entry
+    
+    #adds the space we splitted before
+    if clen(retval[-1]) < width: retval[-1] += u' '
+    else: retval.append(u' ')
+
+    #adds the next word
+    if clen(retval[-1]) + clen(k) <= width: retval[-1] += k
+    else: retval.append(k)
+
+  return [k.strip() for k in retval if k.strip()]
+
 class Line:
   """A line that contains information of some sort."""
 
@@ -22,27 +68,33 @@ class Line:
   def as_html(self):
     return u'<span class="line">%s</span>' % self.value
 
-  def as_pdf(self):
+  def as_pdf(self, width):
     """A normal line just returns itself as PDF"""
-    return [self.value]
-
-  def as_flowable(self):
-    return pdf.XPreformatted(u'', pdf.style['verse'])
+    return break_line(self.value, width)
 
 class ChordLine(Line):
   """A special category of line that contains chords."""
 
   def __init__(self, v, lineno):
     Line.__init__(self, v, lineno)
-    self.bare = LineParser.chord.sub('', self.value, re.UNICODE)
-    self.chords = []
-    subtract = 0 
-    for z in LineParser.chord.finditer(self.value):
-      self.chords.append((z.start()-subtract, z.groups()[0]))
-      subtract = z.end() + (z.end() - z.start()) - 2
-    for i, c in enumerate(self.chords[1:]):
-      # make sure the chords have at least 1 space between them.
-      if c[0] <= 0: self.chords[i+1] = (1, c[1])
+    self.bare, self.chords = self.real_init([self.value])
+    self.bare = self.bare[0]
+    self.chords = self.chords[0]
+
+  def real_init(self, value):
+    bare = [LineParser.chord.sub('', k, re.UNICODE) for k in value]
+    chords = []
+    for k in value:
+      subtract = 0 
+      to_append = []
+      for z in LineParser.chord.finditer(k):
+        to_append.append((z.start()-subtract, z.groups()[0]))
+        subtract = z.end() + (z.end() - z.start()) - 2
+      for i, c in enumerate(to_append[1:]):
+        # make sure the chords have at least 1 space between them.
+        if c[0] <= 0: to_append[i+1] = (1, c[1])
+      chords.append(to_append)
+    return bare, chords
 
   def __str__(self):
     cline = '    '
@@ -57,13 +109,21 @@ class ChordLine(Line):
     v += u'<span class="lyrics">%s</span>\n' % self.bare
     return v 
 
-  def as_pdf(self):
+  def as_pdf(self, width):
     """A chorded line will actually return 2 lines one with the chord and
     a second one with the lyrics."""
-    cline = ''
-    for c in self.chords: cline += (' '*c[0] + c[1].capitalize())
-    cline = '<font color=#000088><b>' + cline + '</b></font>'
-    return [cline, self.bare]
+    value = break_chordline(self.value, width)
+    lyrics, chords = self.real_init(value)
+    diff = len(chords) - len(lyrics)
+    if diff > 0: lyrics += diff * ['']
+    elif diff < 0: chord += diff * ['']
+    lines = []
+    for i, k in enumerate(chords):
+      cline = ''
+      for c in k: cline += (' '*c[0] + c[1].capitalize())
+      c = '<font color=#000088><b>' + cline + '</b></font>'
+      lines.extend((c, lyrics[i]))
+    return lines
 
 class EmptyLine:
   """A line with nothing."""
@@ -77,10 +137,10 @@ class EmptyLine:
   def as_html(self):
     return u'\n'
 
-  def as_pdf(self):
+  def as_pdf(self, width):
     return [u'']
 
-  def as_flowable(self):
+  def as_flowable(self, width):
     return pdf.XPreformatted(u'<br/>', pdf.style['verse'])
 
 class HashComment(EmptyLine):
@@ -97,10 +157,10 @@ class HashComment(EmptyLine):
     #v = u'<span class="hashcomment">%s</span>\n' % self.comment
     return u'' 
 
-  def as_pdf(self):
-    return [self.comment]
+  def as_pdf(self, width):
+    return break_line(self.comment, width)
 
-  def as_flowable(self):
+  def as_flowable(self, width):
     return None
 
 class Verse:
@@ -129,9 +189,9 @@ class Verse:
   def as_html(self):
     return u'\n'.join([k.as_html() for k in self.lines])
 
-  def as_flowable(self):
+  def as_flowable(self, width):
     data = []
-    for k in self.lines: data += k.as_pdf()
+    for k in self.lines: data += k.as_pdf(width)
     return pdf.XPreformatted('\n'.join(data), pdf.style['verse'])
 
 class Chorus(Verse):
@@ -163,9 +223,9 @@ class Chorus(Verse):
     v += u'</span>'
     return u'\n' + v + u'\n'
 
-  def as_flowable(self):
+  def as_flowable(self, width):
     data = []
-    for k in self.lines: data += k.as_pdf()
+    for k in self.lines: data += k.as_pdf(width)
     return pdf.XPreformatted('\n'.join(data), pdf.style['chorus'])
 
 class Tablature(Verse):
@@ -197,9 +257,9 @@ class Tablature(Verse):
     v += u'</span>'
     return u'\n' + v + u'\n'
 
-  def as_flowable(self):
+  def as_flowable(self, width):
     data = []
-    for k in self.lines: data += k.as_pdf()
+    for k in self.lines: data += k.as_pdf(width)
     return pdf.XPreformatted('\n'.join(data), pdf.style['tablature'])
 
 class Command:
@@ -208,10 +268,10 @@ class Command:
   def __init__(self, lineno):
     self.lineno = lineno
 
-  def as_pdf(self):
+  def as_pdf(self, width):
     return []
 
-  def as_flowable(self):
+  def as_flowable(self, width):
     return None
 
 class StartOfChorus(Command):
@@ -263,11 +323,11 @@ class Comment(Command):
   def as_html(self):
     return u'<span class="comment">%s</span>\n' % self.value
 
-  def as_pdf(self):
-    return [u'<font color=#444444><i>' + self.value + '</i></font>']
+  def as_pdf(self, width):
+    return [u'<font color=#444444><i>' + k + '</i></font>' for k in break_line(self.value, width)]
 
-  def as_flowable(self):
-    return pdf.XPreformatted(self.value, pdf.style['comment'])
+  def as_flowable(self, width):
+    return pdf.XPreformatted('\n'.join(break_line(self.value, width)), pdf.style['comment'])
 
 class UnsupportedCommand(Command):
   """One of the chordpro commands we don't support."""

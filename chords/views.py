@@ -123,8 +123,7 @@ def view_song_text(request, song_id):
 
 def view_song_pdf(request, song_id):
   """Views a specific song PDF representation."""
-  from reportlab.platypus import SimpleDocTemplate
-  from pdf import pdf_set_locale
+  from pdf import pdf_set_locale, SongTemplate
   import locale
  
   o = Song.objects.get(id=song_id)
@@ -136,16 +135,15 @@ def view_song_pdf(request, song_id):
   response['Content-Disposition'] = 'attachment; filename="%s.pdf"' % \
       o.title.encode('ascii', 'ignore')
 
-  doc = SimpleDocTemplate(response)
-
+  doc = SongTemplate(response)
   doc.author = o.user.get_full_name() + u'<' + o.user.email + u'>' 
   doc.title = o.title
   doc.subject = ugettext(u'Lyrics and Chords')
 
   story = o.pdf_story(doc)
+  o.pdf_add_page_template(doc)
 
-  doc.build(story, onFirstPage=o.pdf_page_template_first,
-      onLaterPages=o.pdf_page_template)
+  doc.build(story)
 
   # restore default language
   locale.setlocale(locale.LC_ALL, old_locale)

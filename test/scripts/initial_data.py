@@ -51,7 +51,7 @@ def main():
       s.user = admin
       counter += 1
       s.title = 'Song %d' % counter
-      s.performer = unknown 
+      s.performer = unknown
       s.composer = unknown
       s.year = 2010
       s.tone = 'A'

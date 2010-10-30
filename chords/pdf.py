@@ -21,7 +21,13 @@ from django.utils.translation import ungettext, ugettext
 
 style = {}
 
-fontsize = 9 #points
+fontsize = 10 #points
+
+# This is an estimation of the number of characters that fits in a
+# single-column document with a fontsize as indicated above. We have no
+# heuristic to calculate how many there should be so, we have to create a
+# document and count.
+colwidth = {'single': 85, 'double': 41} 
 
 style['normal'] = ParagraphStyle(name='normal', 
                                  fontName='Times-Roman',
@@ -154,7 +160,7 @@ def toc_page(canvas, doc):
   
   canvas.saveState()
 
-  # draws the rectangle with the performer name and picture
+  # draws the rectangle saying "Table of Contents", in black
   # remember: coordinates (0,0) start at bottom left and go up and to the
   # right!
   canvas.setFillGray(0.0)
@@ -198,8 +204,8 @@ def toc_page(canvas, doc):
     return x+0.45*fontsize, y+0.35*fontsize
 
   # Draws song name and page number
-  page_x = doc.width+doc.rightMargin+0.5*cm
-  page_y = doc.bottomMargin-cm
+  page_x = doc.width+doc.rightMargin+0.2*cm
+  page_y = doc.bottomMargin-(0.1*cm)
   page_fontsize = 11 
   page = canvas.beginText()
   page.setTextOrigin(page_x, page_y)
@@ -242,10 +248,26 @@ def set_basic_templates(doc):
   
   doc.addPageTemplates(templates)
 
+class SongTemplate(BaseDocTemplate):
+
+  def __init__(self, *args, **kwargs):
+    from reportlab.lib.units import cm
+
+    if not kwargs.has_key('leftMargin'): kwargs['leftMargin'] = 1.5 * cm
+    if not kwargs.has_key('rightMargin'): kwargs['rightMargin'] = 1.5 * cm
+    if not kwargs.has_key('bottomMargin'): kwargs['bottomMargin'] = 1.5 * cm
+
+    BaseDocTemplate.__init__(self, *args, **kwargs)
 
 class SongBookTemplate(BaseDocTemplate):
 
   def __init__(self, *args, **kwargs):
+    from reportlab.lib.units import cm
+
+    if not kwargs.has_key('leftMargin'): kwargs['leftMargin'] = 1.5 * cm
+    if not kwargs.has_key('rightMargin'): kwargs['rightMargin'] = 1.5 * cm
+    if not kwargs.has_key('bottomMargin'): kwargs['bottomMargin'] = 1.5 * cm
+
     BaseDocTemplate.__init__(self, *args, **kwargs)
     set_basic_templates(self)
 

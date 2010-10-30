@@ -176,6 +176,8 @@ class Song(models.Model):
   tone = models.CharField(_(u'Tone'), help_text=_(u'The tone for this music'),
       max_length=3, choices=TONE_CHOICES, blank=False, null=False)
 
+  two_columns = models.BooleanField(_(u'Two columns'), help_text=_(u'This field determines how printed output (PDFs) will be arranged. If you left it clicked, PDF output will be arranged in two columns. Take attention to the width of the song text in this case, to avoid overflowing or broken paragraphs. You have approximately 40 columns per frame in this case.'), default=False)
+
   song = models.TextField(_(u'Song'), max_length=12000, help_text=ugettext(u'Put here the text lines describing this song. We use the "chordpro" textual format (<a href="%(url)s">reference here</a>). Read the project documentation for more information on the format.') % {'url': 'http://www.pmwiki.org/wiki/Cookbook/ChordPro-Format'}, null=False, blank=False)
 
   def save(self, *args, **kwargs):
@@ -242,7 +244,7 @@ class Song(models.Model):
     canvas.drawText(name)
 
     revision = canvas.beginText()
-    revision.setTextOrigin(doc.leftMargin, doc.bottomMargin-cm)
+    revision.setTextOrigin(doc.leftMargin, doc.bottomMargin-(0.1*cm))
     revision.setFont('Times-Italic', 9)
     revision.setFillColor(Color(0, 0.4, 0, 1))
     revision.textLine(ugettext(u'%(who)s on %(when)s') % \
@@ -251,21 +253,50 @@ class Song(models.Model):
         )
     canvas.drawText(revision)
 
+    # draws a line between the columns if we are in two column mode
+    if self.two_columns:
+      start_pad = 1.5*cm
+      canvas.setStrokeColor(self.performer.pdf_color())
+      canvas.setLineWidth(0.1*cm)
+      canvas.setStrokeAlpha(0.5)
+      canvas.setLineCap(1) #round ends
+      canvas.line(page_width/2, doc.bottomMargin+start_pad, 
+          page_width/2, image_y-border-start_pad)
+
   def pdf_template_id(self):
     return 'SongTemplate-%d'  % self.id
 
   def pdf_add_page_template(self, doc):
     """Adds my own page template to the document."""
+    from reportlab.lib.units import cm
     from reportlab.platypus.frames import Frame
     from reportlab.platypus.doctemplate import PageTemplate
 
     doc._calc() #taken from reportlab source code (magic)
 
-    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height,
-        id='normal', leftPadding=0, rightPadding=0)
-    template = [PageTemplate(id='FirstPageSongTemplate', frames=frame, 
+    # The switch between one or two columns PDF output reflects on having one
+    # or two frames. If we have two frames, the width and the start position
+    # of each frame has to be computed slightly differently.
+    #
+    # Special attention to the right frame or its start will meet the picture
+    # of the artist. So, we start about 2 cm down.
+    if self.two_columns:
+      padding = 0.5 * cm;
+      frame_width = (doc.width - padding) / 2
+      frames = [
+          Frame(doc.leftMargin, doc.bottomMargin, frame_width, doc.height,
+            id='column-1', leftPadding=0, rightPadding=0),
+          Frame(doc.leftMargin + frame_width + padding, doc.bottomMargin, 
+            frame_width, doc.height - 2 * cm,
+            id='column-2', leftPadding=0, rightPadding=0),
+          ]
+    else:
+      frames = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height,
+          id='normal', leftPadding=0, rightPadding=0)
+
+    template = [PageTemplate(id='FirstPageSongTemplate', frames=frames,
       onPage=self.pdf_page_template_first, pagesize=doc.pagesize)]
-    template = [PageTemplate(id=self.pdf_template_id(), frames=frame, 
+    template = [PageTemplate(id=self.pdf_template_id(), frames=frames,
       onPage=self.pdf_page_template, pagesize=doc.pagesize)]
     doc.addPageTemplates(template)
 
@@ -288,12 +319,12 @@ class Song(models.Model):
 
     # Draws song name and page number
     title = canvas.beginText()
-    title.setTextOrigin(doc.leftMargin + doc.width/2, doc.bottomMargin-cm)
+    title.setTextOrigin(doc.leftMargin + doc.width/2, doc.bottomMargin-(0.1*cm))
     title.setFont('Times-Roman', 9)
     title.setFillGray(0.2)
     title.textLine(u"%s" % (self.title))
-    page_x = doc.width+doc.rightMargin+0.5*cm
-    page_y = doc.bottomMargin-cm
+    page_x = doc.width+doc.rightMargin+0.2*cm
+    page_y = doc.bottomMargin-(0.1*cm)
     page_fontsize = 11 
     page = canvas.beginText()
     page.setTextOrigin(page_x, page_y)
@@ -317,13 +348,17 @@ class Song(models.Model):
   def pdf_story(self, doc):
     """Writes itself as a PDF story."""
   
-    from pdf import Spacer, Paragraph, style, fontsize, tide
+    from pdf import Spacer, Paragraph, style, fontsize, tide, colwidth
+
+    # what is the maximum width of text?
+    if self.two_columns: width = colwidth['double']
+    else: width = colwidth['single']
 
     story = [Paragraph(self.title, style['song-title'])]
     story.append(Paragraph(ugettext(u'Tone') + ': ' + self.get_tone_display(), 
       style['tone']))
     story.append(Spacer(1, fontsize))
-    story += [k.as_flowable() for k in self.items()]
+    story += [k.as_flowable(width) for k in self.items()]
     story = [k for k in story if k]
 
     return tide(story, doc)
