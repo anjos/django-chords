@@ -90,7 +90,7 @@ def view_songs(request, template_name="chords/songs.html"):
   except FieldError:
     raise Http404
 
-  paginator = Paginator(objects, 20)
+  paginator = Paginator(objects, objects.count())
 
   try: page = int(request.GET.get('page', '1'))
   except ValueError: page = 1
