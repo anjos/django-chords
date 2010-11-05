@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-23 07:28+0200\n"
+"POT-Creation-Date: 2010-11-05 07:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,12 +33,12 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: admin.py:43 admin.py:116 templates/chords/collections.html:32
+#: admin.py:43 admin.py:121 templates/chords/collections.html:29
 #: templates/chords/songs.html:9
 msgid "Songs"
 msgstr ""
 
-#: admin.py:48 models.py:42 templates/chords/artists.html:30
+#: admin.py:48 models.py:42 templates/chords/artists.html:27
 msgid "Color"
 msgstr ""
 
@@ -62,8 +62,12 @@ msgid ""
 "trying to upload. Here is a hint: %(error)s"
 msgstr ""
 
-#: models.py:40 models.py:337 templates/chords/artists.html:29
-#: templates/chords/collections.html:29
+#: admin.py:105
+msgid "Two Columns"
+msgstr ""
+
+#: models.py:40 models.py:372 templates/chords/artists.html:26
+#: templates/chords/collections.html:26
 msgid "Name"
 msgstr ""
 
@@ -93,16 +97,16 @@ msgstr ""
 msgid "artist"
 msgstr ""
 
-#: models.py:74 templates/chords/artists.html:23
+#: models.py:74
 msgid "artists"
 msgstr ""
 
-#: models.py:102 models.py:377
+#: models.py:102 models.py:412
 #, python-format
 msgid "<i>Chordbook</i><br/><b>%(name)s</b>"
 msgstr ""
 
-#: models.py:108 pdf.py:278
+#: models.py:108 pdf.py:300
 #, python-format
 msgid "Last update: <b>%(update)s</b><br/>%(url)s<br/>Downloaded on %(date)s"
 msgstr ""
@@ -243,16 +247,16 @@ msgstr ""
 msgid "A flat minor"
 msgstr ""
 
-#: models.py:162 models.py:339 templates/chords/collections.html:30
+#: models.py:162 models.py:374 templates/chords/collections.html:27
 msgid "Created"
 msgstr ""
 
-#: models.py:165 models.py:342
+#: models.py:165 models.py:377
 msgid "Last updated"
 msgstr ""
 
-#: models.py:168 templates/chords/artist.html:28
-#: templates/chords/collection.html:28 templates/chords/songs.html:29
+#: models.py:168 templates/chords/artist.html:26
+#: templates/chords/collection.html:26 templates/chords/songs.html:27
 msgid "Title"
 msgstr ""
 
@@ -270,9 +274,9 @@ msgid ""
 "if you do not know it."
 msgstr ""
 
-#: models.py:176 models.py:323 templates/chords/artist.html:29
-#: templates/chords/collection.html:31 templates/chords/song.html:31
-#: templates/chords/songs.html:32
+#: models.py:176 models.py:358 templates/chords/artist.html:27
+#: templates/chords/collection.html:29 templates/chords/song.html:31
+#: templates/chords/song_simple.html:23 templates/chords/songs.html:30
 msgid "Tone"
 msgstr ""
 
@@ -281,10 +285,22 @@ msgid "The tone for this music"
 msgstr ""
 
 #: models.py:179
-msgid "Song"
+msgid "Two columns"
 msgstr ""
 
 #: models.py:179
+msgid ""
+"This field determines how printed output (PDFs) will be arranged. If you "
+"left it clicked, PDF output will be arranged in two columns. Take attention "
+"to the width of the song text in this case, to avoid overflowing or broken "
+"paragraphs. You have approximately 40 columns per frame in this case."
+msgstr ""
+
+#: models.py:181
+msgid "Song"
+msgstr ""
+
+#: models.py:181
 #, python-format
 msgid ""
 "Put here the text lines describing this song. We use the \"chordpro\" "
@@ -292,70 +308,69 @@ msgid ""
 "documentation for more information on the format."
 msgstr ""
 
-#: models.py:186
+#: models.py:188
 msgid "song"
 msgstr ""
 
-#: models.py:187 templates/chords/artist.html:22
-#: templates/chords/collection.html:22 templates/chords/songs.html:23
+#: models.py:189
 msgid "songs"
 msgstr ""
 
-#: models.py:191
+#: models.py:193
 #, python-format
 msgid "%(title)s in %(tone)s (%(performer)s)"
 msgstr ""
 
-#: models.py:248
+#: models.py:250
 #, python-format
 msgid "%(who)s on %(when)s"
 msgstr ""
 
-#: models.py:337
+#: models.py:372
 msgid "The name of this collection"
 msgstr ""
 
-#: models.py:350
+#: models.py:385
 msgid "collection"
 msgstr ""
 
-#: models.py:351 templates/chords/collections.html:23
+#: models.py:386
 msgid "collections"
 msgstr ""
 
-#: models.py:354
+#: models.py:389
 #, python-format
 msgid "Collection(%(name)s from %(owner)s, %(songs)d song)"
 msgid_plural "Collection(%(name)s from %(owner)s, %(songs)d songs)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models.py:382
+#: models.py:417
 #, python-format
 msgid ""
 "<i>%(name)s</i>, last update: <b>%(update)s</b><br/>%(url)s<br/>Downloaded "
 "on %(date)s"
 msgstr ""
 
-#: pdf.py:171
+#: pdf.py:177
 msgid "Table of Contents"
 msgstr ""
 
-#: pdf.py:270
+#: pdf.py:292
 #, python-format
 msgid "<i>Chordbook</i><br/><b>%(site)s</b>"
 msgstr ""
 
-#: views.py:143
+#: views.py:116
 msgid "Lyrics and Chords"
 msgstr ""
 
-#: views.py:239
+#: views.py:196
 #, python-format
 msgid "Chordbook from %(site)s"
 msgstr ""
 
-#: views.py:241 views.py:297 views.py:354
+#: views.py:198 views.py:254 views.py:311
 msgid "Lyrics and Chords Book"
 msgstr ""
 
@@ -393,54 +408,63 @@ msgstr ""
 msgid "download all songs available for this artist in PDF format"
 msgstr ""
 
-#: templates/chords/artist.html:22 templates/chords/artists.html:23
-#: templates/chords/collection.html:22 templates/chords/collections.html:23
-#: templates/chords/songs.html:23
-msgid "pages"
+#: templates/chords/artist.html:21 templates/chords/collection.html:21
+#: templates/chords/songs.html:21
+#, python-format
+msgid "From this page you have access to the single uploaded song"
+msgid_plural "From this page you have access to all %(counter)s uploaded songs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/chords/artist.html:21
+msgid "for"
 msgstr ""
 
-#: templates/chords/artist.html:27 templates/chords/artists.html:28
-#: templates/chords/collection.html:27 templates/chords/collections.html:28
-#: templates/chords/songs.html:28
+#: templates/chords/artist.html:25 templates/chords/artists.html:25
+#: templates/chords/collection.html:25 templates/chords/collections.html:25
+#: templates/chords/songs.html:26
 msgid "Shortcuts"
 msgstr ""
 
-#: templates/chords/artist.html:30 templates/chords/collection.html:32
-#: templates/chords/songs.html:34
+#: templates/chords/artist.html:28 templates/chords/collection.html:30
+#: templates/chords/songs.html:32
 msgid "Updated"
 msgstr ""
 
-#: templates/chords/artist.html:35 templates/chords/collection.html:37
+#: templates/chords/artist.html:33 templates/chords/collection.html:35
 #: templates/chords/songs.html:39
 msgid "view this song"
 msgstr ""
 
-#: templates/chords/artist.html:36 templates/chords/collection.html:38
-#: templates/chords/song.html:23 templates/chords/songs.html:40
+#: templates/chords/artist.html:34 templates/chords/collection.html:36
+#: templates/chords/song.html:23 templates/chords/song_simple.html:15
+#: templates/chords/songs.html:40
 msgid "download song in PDF format"
 msgstr ""
 
-#: templates/chords/artist.html:37 templates/chords/collection.html:39
-#: templates/chords/song.html:24 templates/chords/songs.html:41
+#: templates/chords/artist.html:35 templates/chords/collection.html:37
+#: templates/chords/song.html:24 templates/chords/song_simple.html:16
+#: templates/chords/songs.html:41
 msgid "view original text file"
 msgstr ""
 
-#: templates/chords/artist.html:38 templates/chords/collection.html:40
-#: templates/chords/song.html:25 templates/chords/songs.html:42
+#: templates/chords/artist.html:36 templates/chords/collection.html:38
+#: templates/chords/song.html:25 templates/chords/song_simple.html:17
+#: templates/chords/songs.html:42
 msgid "edit this song"
 msgstr ""
 
-#: templates/chords/artist.html:40 templates/chords/collection.html:42
+#: templates/chords/artist.html:38 templates/chords/collection.html:40
 #: templates/chords/songs.html:44
 msgid "Click here to access this song"
 msgstr ""
 
-#: templates/chords/artist.html:42 templates/chords/collection.html:46
+#: templates/chords/artist.html:40 templates/chords/collection.html:44
 #: templates/chords/songs.html:49
 msgid "by"
 msgstr ""
 
-#: templates/chords/artist.html:45 templates/chords/collection.html:49
+#: templates/chords/artist.html:43 templates/chords/collection.html:47
 #: templates/chords/songs.html:52
 msgid "No songs uploaded so far."
 msgstr ""
@@ -457,40 +481,43 @@ msgstr ""
 msgid "Available Artists"
 msgstr ""
 
-#: templates/chords/artists.html:20
-msgid "From this page you have access to all artists."
-msgstr ""
+#: templates/chords/artists.html:21
+#, python-format
+msgid "From this page you have access to the only created artist."
+msgid_plural "From this page you have access to our %(counter)s artists."
+msgstr[0] ""
+msgstr[1] ""
 
-#: templates/chords/artists.html:31
+#: templates/chords/artists.html:28
 msgid "Perfomer"
 msgstr ""
 
-#: templates/chords/artists.html:32 templates/chords/collection.html:30
-#: templates/chords/songs.html:31
+#: templates/chords/artists.html:29 templates/chords/collection.html:28
+#: templates/chords/songs.html:29
 msgid "Composer"
 msgstr ""
 
-#: templates/chords/artists.html:37
+#: templates/chords/artists.html:34
 msgid "view this artist's page"
 msgstr ""
 
-#: templates/chords/artists.html:38
+#: templates/chords/artists.html:35
 msgid "download a PDF containing all songs attributed to this artist"
 msgstr ""
 
-#: templates/chords/artists.html:39
+#: templates/chords/artists.html:36
 msgid "edit this artist"
 msgstr ""
 
-#: templates/chords/artists.html:41
+#: templates/chords/artists.html:38
 msgid "Click here to access the page from this artist"
 msgstr ""
 
-#: templates/chords/artists.html:41
+#: templates/chords/artists.html:38
 msgid "photo of"
 msgstr ""
 
-#: templates/chords/artists.html:47 templates/chords/collections.html:49
+#: templates/chords/artists.html:44 templates/chords/collections.html:46
 msgid "No collections created so far."
 msgstr ""
 
@@ -510,7 +537,11 @@ msgstr ""
 msgid "download all songs available at this collection in PDF format"
 msgstr ""
 
-#: templates/chords/collection.html:29 templates/chords/songs.html:30
+#: templates/chords/collection.html:21
+msgid "in collection"
+msgstr ""
+
+#: templates/chords/collection.html:27 templates/chords/songs.html:28
 msgid "Performer"
 msgstr ""
 
@@ -526,35 +557,39 @@ msgstr ""
 msgid "Available Collections"
 msgstr ""
 
-#: templates/chords/collections.html:20
-msgid "From this page you have access to all collections created so far."
-msgstr ""
+#: templates/chords/collections.html:21
+#, python-format
+msgid "From this page you have access to the only created collection."
+msgid_plural "From this page you have access to all %(counter)s collections."
+msgstr[0] ""
+msgstr[1] ""
 
-#: templates/chords/collections.html:31
+#: templates/chords/collections.html:28
 msgid "Owner"
 msgstr ""
 
-#: templates/chords/collections.html:33
+#: templates/chords/collections.html:30
 msgid "Last Update"
 msgstr ""
 
-#: templates/chords/collections.html:38
+#: templates/chords/collections.html:35
 msgid "view this collection"
 msgstr ""
 
-#: templates/chords/collections.html:39
+#: templates/chords/collections.html:36
 msgid "download a PDF of this collection"
 msgstr ""
 
-#: templates/chords/collections.html:40
+#: templates/chords/collections.html:37
 msgid "edit this collection"
 msgstr ""
 
-#: templates/chords/collections.html:42
+#: templates/chords/collections.html:39
 msgid "Click here to access this collection"
 msgstr ""
 
-#: templates/chords/collections.html:46 templates/chords/song.html:9
+#: templates/chords/collections.html:43 templates/chords/song.html:9
+#: templates/chords/song_simple.html:5
 msgid "in"
 msgstr ""
 
@@ -563,23 +598,23 @@ msgstr ""
 msgid "go to page %(page)s"
 msgstr ""
 
-#: templates/chords/song.html:20
+#: templates/chords/song.html:20 templates/chords/song_simple.html:12
 msgid "Click here to view other songs by this artist."
 msgstr ""
 
-#: templates/chords/song.html:20
+#: templates/chords/song.html:20 templates/chords/song_simple.html:12
 msgid "photo of "
 msgstr ""
 
-#: templates/chords/song.html:22
+#: templates/chords/song.html:22 templates/chords/song_simple.html:14
 msgid "actions: "
 msgstr ""
 
-#: templates/chords/song.html:27
+#: templates/chords/song.html:27 templates/chords/song_simple.html:19
 msgid "Last revision by"
 msgstr ""
 
-#: templates/chords/song.html:27
+#: templates/chords/song.html:27 templates/chords/song_simple.html:19
 msgid "on"
 msgstr ""
 
@@ -599,12 +634,7 @@ msgstr ""
 msgid "download all songs available in PDF format"
 msgstr ""
 
-#: templates/chords/songs.html:20
-#, python-format
-msgid "From this page you have access to all %(count)s uploaded songs."
-msgstr ""
-
-#: templates/chords/songs.html:33
+#: templates/chords/songs.html:31
 msgid "In Collections"
 msgstr ""
 

@@ -8,7 +8,6 @@
 
 from django.shortcuts import render_to_response#, redirect
 from django.template import RequestContext
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.http import Http404, HttpResponse
 from django.db.models.sql.query import FieldError
 from django.db.models import Q
@@ -30,17 +29,9 @@ def view_artists(request, template_name="chords/artists.html"):
   except FieldError:
     raise Http404
 
-  paginator = Paginator(objects, 20)
-
-  try: page = int(request.GET.get('page', '1'))
-  except ValueError: page = 1
-
-  try: pages = paginator.page(page)
-  except (EmptyPage, InvalidPage): pages = paginator.page(paginator.num_pages)
-
   return render_to_response(template_name,
                             {
-                              'pages': pages, 
+                              'object_list': objects, 
                             },
                             context_instance=RequestContext(request))
 
@@ -59,18 +50,10 @@ def view_artist(request, artist_id, template_name="chords/artist.html"):
   except FieldError:
     raise Http404
 
-  paginator = Paginator(objects, 20)
-
-  try: page = int(request.GET.get('page', '1'))
-  except ValueError: page = 1
-
-  try: pages = paginator.page(page)
-  except (EmptyPage, InvalidPage): pages = paginator.page(paginator.num_pages)
-
   return render_to_response(template_name,
                             {
                               'object': artist,
-                              'pages': pages, 
+                              'object_list': objects, 
                               'getreq': getreq,
                             },
                             context_instance=RequestContext(request))
@@ -90,17 +73,9 @@ def view_songs(request, template_name="chords/songs.html"):
   except FieldError:
     raise Http404
 
-  paginator = Paginator(objects, objects.count())
-
-  try: page = int(request.GET.get('page', '1'))
-  except ValueError: page = 1
-
-  try: pages = paginator.page(page)
-  except (EmptyPage, InvalidPage): pages = paginator.page(paginator.num_pages)
-
   return render_to_response(template_name,
                             {
-                              'pages': pages, 
+                              'object_list': objects, 
                               'getreq': getreq,
                             },
                             context_instance=RequestContext(request))
@@ -163,16 +138,8 @@ def view_collections(request, template_name="chords/collections.html"):
   except FieldError:
     raise Http404
 
-  paginator = Paginator(objects, 20)
-
-  try: page = int(request.GET.get('page', '1'))
-  except ValueError: page = 1
-
-  try: pages = paginator.page(page)
-  except (EmptyPage, InvalidPage): pages = paginator.page(paginator.num_pages)
-
   return render_to_response(template_name,
-                            {'pages': pages, },
+                            {'object_list': objects, },
                             context_instance=RequestContext(request))
 
 def view_collection(request, collection_id,
@@ -191,18 +158,10 @@ def view_collection(request, collection_id,
   except FieldError:
     raise Http404
 
-  paginator = Paginator(objects, 20)
-
-  try: page = int(request.GET.get('page', '1'))
-  except ValueError: page = 1
-
-  try: pages = paginator.page(page)
-  except (EmptyPage, InvalidPage): pages = paginator.page(paginator.num_pages)
-
   return render_to_response(template_name,
                             {
                               'object': collection,
-                              'pages': pages, 
+                              'object_list': objects,
                               'getreq': getreq,
                             },
                             context_instance=RequestContext(request))

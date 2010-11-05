@@ -17,40 +17,41 @@
   <span class="item"><a href="{% url chords:view-collections %}">{% trans "View Collections" %}</a></span>
   </p>
   <p class="title">{% trans "Available Songs" %} <a href="{% url chords:view-songbook-pdf %}{{ getreq }}" title="{% trans "download all songs available in PDF format" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a></p>
-  <p>{% blocktrans with pages.paginator.count as count %}From this page you have access to all {{ count }} uploaded songs.{% endblocktrans %}</p>
+  
+  <p>{% blocktrans count object_list.count as counter %}From this page you have access to the single uploaded song{% plural %}From this page you have access to all {{ counter }} uploaded songs{% endblocktrans %}.</p>
 
-  {% ifnotequal pages.paginator.num_pages 1 %}
-  <p class="pagination">{{ pages.paginator.count }} {% trans "songs" %}, {% trans "pages" %}: {% chords_paginator pages %}</p>
-  {% endifnotequal %}
-
-  <table class="songs">
-    <tr>
-      <th>{% trans "Shortcuts" %}</th>
-      <th>{% trans "Title" %} {% chords_sorter "title" %}</th>
-      <th>{% trans "Performer" %} {% chords_sorter "performer" %}</th>
-      <th>{% trans "Composer" %} {% chords_sorter "composer" %}</th>
-      <th>{% trans "Tone" %} {% chords_sorter "tone" %}</th>
-      <th>{% trans "In Collections" %}</th>
-      <th>{% trans "Updated" %} {% chords_sorter "updated" %}</th>
-    </tr>
-    {% for obj in pages.object_list %}
-    <tr class="{% cycle "even" "odd" %}">
-      <td class="shortcuts">
-        <a href="{% url chords:view-song obj.id %}" title="{% trans "view this song" %}"><img src="{% url media "chords/img/icons/16x16/home.png" %}" width="16" height="16"/></a>
-        <a href="{% url chords:view-song-pdf obj.id %}" title="{% trans "download song in PDF format" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a>
-        <a href="{% url chords:view-song-text obj.id %}" title="{% trans "view original text file" %}"><img src="{% url media "chords/img/icons/16x16/text.png" %}" width="16" height="16"/></a>
-        <a href="{% url admin:chords_song_change obj.id %}" title="{% trans "edit this song" %}"><img src="{% url media "chords/img/icons/16x16/edit.png" %}" width="16" height="16"/></a>
-      </td>
-      <td class="title"><a href="{% url chords:view-song obj.id %}" title="{% trans "Click here to access this song" %}">{{ obj.title }}</a></td>
-      <td class="performer">{{ obj.performer.name }}</td>
-      <td class="composer">{{ obj.composer.name }}</td>
-      <td class="tone">{{ obj.get_tone_display }}</td>
-      <td class="collections">{{ obj.collection_set.count }}</td>
-      <td class="date">{{ obj.updated|date:"D, d/b/Y H:i T" }} {% trans "by" %} {{ obj.user.first_name.capitalize }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="5">{% trans "No songs uploaded so far." %}</td></tr>
-    {% endfor %}
+  <table id="song-list" class="songs">
+    <thead>
+      <tr>
+        <th>{% trans "Shortcuts" %}</th>
+        <th>{% trans "Title" %} {% chords_sorter "title" %}</th>
+        <th>{% trans "Performer" %} {% chords_sorter "performer" %}</th>
+        <th>{% trans "Composer" %} {% chords_sorter "composer" %}</th>
+        <th>{% trans "Tone" %} {% chords_sorter "tone" %}</th>
+        <th>{% trans "In Collections" %}</th>
+        <th>{% trans "Updated" %} {% chords_sorter "updated" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for obj in object_list %}
+      <tr class="{% cycle "even" "odd" %}">
+        <td class="shortcuts">
+          <a href="{% url chords:view-song obj.id %}" title="{% trans "view this song" %}"><img src="{% url media "chords/img/icons/16x16/home.png" %}" width="16" height="16"/></a>
+          <a href="{% url chords:view-song-pdf obj.id %}" title="{% trans "download song in PDF format" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a>
+          <a href="{% url chords:view-song-text obj.id %}" title="{% trans "view original text file" %}"><img src="{% url media "chords/img/icons/16x16/text.png" %}" width="16" height="16"/></a>
+          <a href="{% url admin:chords_song_change obj.id %}" title="{% trans "edit this song" %}"><img src="{% url media "chords/img/icons/16x16/edit.png" %}" width="16" height="16"/></a>
+        </td>
+        <td class="title"><a href="{% url chords:view-song obj.id %}" title="{% trans "Click here to access this song" %}">{{ obj.title }}</a></td>
+        <td class="performer">{{ obj.performer.name }}</td>
+        <td class="composer">{{ obj.composer.name }}</td>
+        <td class="tone">{{ obj.get_tone_display }}</td>
+        <td class="collections">{{ obj.collection_set.count }}</td>
+        <td class="date">{{ obj.updated|date:"D, d/b/Y H:i T" }} {% trans "by" %} {{ obj.user.first_name.capitalize }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5">{% trans "No songs uploaded so far." %}</td></tr>
+      {% endfor %}
+    </tbody>
   </table>
 
 </div>

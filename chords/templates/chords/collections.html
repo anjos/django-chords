@@ -17,11 +17,8 @@
   <span class="item"><a href="{% url chords:view-songs %}">{% trans "View Songs" %}</a></span>
   </p>
   <p class="title">{% trans "Available Collections" %}</p>
-  <p>{% trans "From this page you have access to all collections created so far." %}</p>
-
-  {% ifnotequal pages.paginator.num_pages 1 %}
-  <p class="pagination">{{ pages.paginator.count }} {% trans "collections" %}, {% trans "pages" %}: {% chords_paginator pages %}</p>
-  {% endifnotequal %}
+  
+  <p>{% blocktrans count object_list.count as counter %}From this page you have access to the only created collection.{% plural %}From this page you have access to all {{ counter }} collections.{% endblocktrans %}</p>
 
   <table class="songs">
     <tr>
@@ -32,7 +29,7 @@
       <th>{% trans "Songs" %}</th>
       <th>{% trans "Last Update" %}</th>
     </tr>
-    {% for obj in pages.object_list %}
+    {% for obj in object_list %}
     <tr class="{% cycle "even" "odd" %}">
       <td class="shortcuts">
         <a href="{% url chords:view-collection obj.id %}" title="{% trans "view this collection" %}"><img src="{% url media "chords/img/icons/16x16/home.png" %}" width="16" height="16"/></a>
