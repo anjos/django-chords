@@ -11,6 +11,7 @@
 
       <div class="info-bar">
         <span class="actions">{% trans "actions: " %}
+          <a href="{% url chords:view-song object.id %}" title="{% trans "view html display embedded on the original website" %}"><img src="{% url media "chords/img/icons/16x16/simple.png" %}" width="16" height="16"/></a>
           <a href="{% url chords:view-song-pdf object.id %}" title="{% trans "download song in PDF format" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a>
           <a href="{% url chords:view-song-text object.id %}" title="{% trans "view original text file" %}"><img src="{% url media "chords/img/icons/16x16/text.png" %}" width="16" height="16"/></a>
           <a href="{% url admin:chords_song_change object.id %}" title="{% trans "edit this song" %}"><img src="{% url media "chords/img/icons/16x16/edit.png" %}" width="16" height="16"/></a>
