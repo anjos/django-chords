@@ -9,7 +9,6 @@
   <body>
     <div class="chords">
 
-      <p class="song-performer" style="background-color: #{{ object.performer.color }}"><a href="{% url chords:view-artist object.performer.id %}" title="{% trans "Click here to view other songs by this artist." %}">{{ object.performer.name }} <img src="{{ object.performer.image.url }}" width="60" height="80" alt="[{% trans "photo of " %} {{ object.performer.name }}]"/></a></p>
       <div class="info-bar">
         <span class="actions">{% trans "actions: " %}
           <a href="{% url chords:view-song-pdf object.id %}" title="{% trans "download song in PDF format" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a>
@@ -19,9 +18,33 @@
         <span class="revision-info"><img src="{% url media "chords/img/icons/16x16/ok.png" %}" alt="[v]"/> {% trans "Last revision by" %} <span class="revision-author">{{ object.user.first_name.capitalize }}</span> {% trans "on" %} <span class="revision-author">{{ object.updated|date:"l, d/b/Y" }}</span></span>
       </div>
 
-      <p class="title">{{ object.title }}</p>
-      <p class="tone">{% trans "Tone" %}: {{ object.get_tone_display }}</p>
+
+      <table class="info">
+      <tr>
+        <td><span class="performer-simple-picture" style="border-color: #{{ object.performer.color }}"><a href="{% url chords:view-artist object.performer.id %}" title="{% trans "Click here to view other songs by this artist." %}"><img src="{{ object.performer.image.url }}" width="60" height="80" alt="[{% trans "photo of " %} {{ object.performer.name }}]"/></a></span></td>
+        <td><p class="title">{{ object.title }} (<font style="color: #{{ object.performer.color }}">{{ object.performer.name }}</font>)</p>
+          <p class="tone">{% trans "Tone" %}: {{ object.get_tone_display }}</p>
+        </td>
+      </tr>
+      </table>
+
+      {% if object.two_columns %}
+      {% with object.items_by_column as column %}
+      <table class="two_columns">
+        <tr>
+          <td id="column_1">
+            <pre class="song">{% autoescape off %}{% for i in column.0 %}{{ i.as_html }}{% endfor %}{% endautoescape %}</pre>
+          </td>
+          <td class="separator" style="background-color: #{{ object.performer.color }}"></td>
+          <td id="column_2">
+            <pre class="song">{% autoescape off %}{% for i in column.1 %}{{ i.as_html }}{% endfor %}{% endautoescape %}</pre>
+          </td>
+        </tr>
+      </table>
+      {% endwith %}
+      {% else %}
       <pre class="song">{% autoescape off %}{% for i in object.items %}{{ i.as_html }}{% endfor %}{% endautoescape %}</pre>
+      {% endif %}
 
     </div>
   </body>

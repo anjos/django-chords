@@ -200,6 +200,16 @@ class Song(models.Model):
   def items(self):
     return syntax_analysis(parse(self.song))
 
+  def items_by_column(self):
+    i = self.items()
+    if len(i) <= 1: return i
+    #else, we can split it better
+    cut = len(i)/2
+    if len(i)%2 == 1: 
+      #if the number of elements is odd, put more on the first column
+      cut += 1
+    return (i[:cut], i[cut:])
+
   def by(self):
     """Returns a nice arrangement for performer/composer"""
     if self.performer == self.composer: return self.performer.name

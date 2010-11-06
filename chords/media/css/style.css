@@ -112,3 +112,30 @@
   font-weight: bold;
 }
 
+.chords .performer-simple-picture {
+  float: left;
+  margin-top: 5px;
+  margin-right: 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 3px;
+}
+
+.chords .performer-simple-picture img {
+  border: 3px white solid;
+  border-radius: 3px;
+}
+
+.chords table.two_columns {
+  width: 100%;
+}
+
+.chords table.two_columns td {
+  vertical-align: top;
+}
+
+.chords table.two_columns td.separator {
+  padding: 2px;
+  border: 5px white solid;
+  border-radius: 3px;
+}
