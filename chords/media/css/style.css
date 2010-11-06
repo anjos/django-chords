@@ -135,7 +135,9 @@
 }
 
 .chords table.two_columns td.separator {
-  padding: 2px;
-  border: 5px white solid;
-  border-radius: 3px;
+  border-right: 3px solid;
+}
+
+.chords table.two_columns td#column_2 {
+  padding-left: 5px;
 }

@@ -46,7 +46,7 @@
         <td class="composer">{{ obj.composer.name }}</td>
         <td class="tone">{{ obj.get_tone_display }}</td>
         <td class="collections">{{ obj.collection_set.count }}</td>
-        <td class="date">{{ obj.updated|date:"D, d/b/Y H:i T" }} {% trans "by" %} {{ obj.user.first_name.capitalize }}</td>
+        <td class="date">{{ obj.updated|date:"d/b/Y H:i" }}, {{ obj.user.first_name.capitalize }}</td>
       </tr>
       {% empty %}
       <tr><td colspan="5">{% trans "No songs uploaded so far." %}</td></tr>

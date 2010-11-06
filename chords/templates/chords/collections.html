@@ -37,7 +37,7 @@
         <a href="{% url admin:chords_collection_change obj.id %}" title="{% trans "edit this collection" %}"><img src="{% url media "chords/img/icons/16x16/edit.png" %}" width="16" height="16"/></a>
       </td>
       <td class="title"><a href="{% url chords:view-collection obj.id %}" title="{% trans "Click here to access this collection" %}">{{ obj.name }}</a></td>
-      <td class="date">{{ obj.date|date:"D, d/b/Y H:i T" }}</td>
+      <td class="date">{{ obj.date|date:"d/b/Y H:i" }}</td>
       <td class="owner">{{ obj.owner.first_name.capitalize }}</td>
       <td class="songs">{{ obj.song.count }}</td>
       <td class="last-song">{% with obj.last_update as s %}{{ s.title }} {% trans "in" %} {{ s.get_tone_display }}{% endwith %}</td>

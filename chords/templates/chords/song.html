@@ -37,7 +37,7 @@
       <td id="column_1">
         <pre class="song">{% autoescape off %}{% for i in column.0 %}{{ i.as_html }}{% endfor %}{% endautoescape %}</pre>
       </td>
-      <td class="separator" style="background-color: #{{ object.performer.color }}"></td>
+      <td class="separator" style="border-right-color: #{{ object.performer.color }}"><br/></td>
       <td id="column_2">
         <pre class="song">{% autoescape off %}{% for i in column.1 %}{{ i.as_html }}{% endfor %}{% endautoescape %}</pre>
       </td>
