@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% load i18n chords_tags %}
+{% load staticfiles i18n chords_tags %}
 
 {% block media %}
 {{ block.super }}
-  <link href="{% url media "chords/css/style.css" %}" rel="stylesheet" type="text/css" media="screen" />
+  <link href="{% static "chords/css/style.css" %}" rel="stylesheet" type="text/css" media="screen" />
 {% endblock %}
 
 {% block title %}{% trans "Artist" %} "{{ object.name }}"{% endblock %}
@@ -16,7 +16,7 @@
   <span class="item"><a href="{% url chords:view-songs %}">{% trans "View Songs" %}</a></span>
   <span class="item"><a href="{% url chords:view-collections %}">{% trans "View Collections" %}</a></span>
   </p>
-  <p class="title">{% trans "Available Songs for" %} "{{ object.name }}" <a href="{% url chords:view-artist-songbook-pdf object.id %}{{ getreq }}" title="{% trans "download all songs available for this artist in PDF format" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a></p>
+  <p class="title">{% trans "Available Songs for" %} "{{ object.name }}" <a href="{% url chords:view-artist-songbook-pdf object.id %}{{ getreq }}" title="{% trans "download all songs available for this artist in PDF format" %}"><img src="{% static "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a></p>
 
   <p>{% blocktrans count object_list.count as counter %}From this page you have access to the single uploaded song{% plural %}From this page you have access to all {{ counter }} uploaded songs{% endblocktrans %} {% trans "for" %} "{{ object.name }}".</p>
 
@@ -30,10 +30,10 @@
     {% for obj in object_list %}
     <tr class="{% cycle "even" "odd" %}">
       <td class="shortcuts">
-        <a href="{% url chords:view-song obj.id %}" title="{% trans "view this song" %}"><img src="{% url media "chords/img/icons/16x16/home.png" %}" width="16" height="16"/></a>
-        <a href="{% url chords:view-song-pdf obj.id %}" title="{% trans "download song in PDF format" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a>
-        <a href="{% url chords:view-song-text obj.id %}" title="{% trans "view original text file" %}"><img src="{% url media "chords/img/icons/16x16/text.png" %}" width="16" height="16"/></a>
-        <a href="{% url admin:chords_song_change obj.id %}" title="{% trans "edit this song" %}"><img src="{% url media "chords/img/icons/16x16/edit.png" %}" width="16" height="16"/></a>
+        <a href="{% url chords:view-song obj.id %}" title="{% trans "view this song" %}"><img src="{% static "chords/img/icons/16x16/home.png" %}" width="16" height="16"/></a>
+        <a href="{% url chords:view-song-pdf obj.id %}" title="{% trans "download song in PDF format" %}"><img src="{% static "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a>
+        <a href="{% url chords:view-song-text obj.id %}" title="{% trans "view original text file" %}"><img src="{% static "chords/img/icons/16x16/text.png" %}" width="16" height="16"/></a>
+        <a href="{% url admin:chords_song_change obj.id %}" title="{% trans "edit this song" %}"><img src="{% static "chords/img/icons/16x16/edit.png" %}" width="16" height="16"/></a>
       </td>
       <td class="title"><a href="{% url chords:view-song obj.id %}" title="{% trans "Click here to access this song" %}">{{ obj.title }}</a></td>
       <td class="tone">{{ obj.get_tone_display }}</td>

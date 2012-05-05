@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% load i18n chords_tags %}
+{% load staticfiles i18n chords_tags %}
 
 {% block media %}
 {{ block.super }}
-  <link href="{% url media "chords/css/style.css" %}" rel="stylesheet" type="text/css" media="screen" />
+  <link href="{% static "chords/css/style.css" %}" rel="stylesheet" type="text/css" media="screen" />
 {% endblock %}
 
 {% block title %}{% trans "Collections" %}{% endblock %}
@@ -32,9 +32,9 @@
     {% for obj in object_list %}
     <tr class="{% cycle "even" "odd" %}">
       <td class="shortcuts">
-        <a href="{% url chords:view-collection obj.id %}" title="{% trans "view this collection" %}"><img src="{% url media "chords/img/icons/16x16/home.png" %}" width="16" height="16"/></a>
-        <a href="{% url chords:view-collection-songbook-pdf obj.id %}" title="{% trans "download a PDF of this collection" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a>
-        <a href="{% url admin:chords_collection_change obj.id %}" title="{% trans "edit this collection" %}"><img src="{% url media "chords/img/icons/16x16/edit.png" %}" width="16" height="16"/></a>
+        <a href="{% url chords:view-collection obj.id %}" title="{% trans "view this collection" %}"><img src="{% static "chords/img/icons/16x16/home.png" %}" width="16" height="16"/></a>
+        <a href="{% url chords:view-collection-songbook-pdf obj.id %}" title="{% trans "download a PDF of this collection" %}"><img src="{% static "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a>
+        <a href="{% url admin:chords_collection_change obj.id %}" title="{% trans "edit this collection" %}"><img src="{% static "chords/img/icons/16x16/edit.png" %}" width="16" height="16"/></a>
       </td>
       <td class="title"><a href="{% url chords:view-collection obj.id %}" title="{% trans "Click here to access this collection" %}">{{ obj.name }}</a></td>
       <td class="date">{{ obj.date|date:"d/b/Y H:i" }}</td>

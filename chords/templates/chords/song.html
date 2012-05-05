@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load staticfiles i18n %}
 
 {% block media %}
 {{ block.super }}
-  <link href="{% url media "chords/css/style.css" %}" rel="stylesheet" type="text/css" media="screen" />
+  <link href="{% static "chords/css/style.css" %}" rel="stylesheet" type="text/css" media="screen" />
 {% endblock %}
 
 {% block title %}{{ object.title }} {% trans "in" %} {{ object.get_tone_display }}{% endblock %}
@@ -20,12 +20,12 @@
   <p class="song-performer" style="background-color: #{{ object.performer.color }}"><a href="{% url chords:view-artist object.performer.id %}" title="{% trans "Click here to view other songs by this artist." %}">{{ object.performer.name }} <img src="{{ object.performer.image.url }}" width="60" height="80" alt="[{% trans "photo of " %} {{ object.performer.name }}]"/></a></p>
   <div class="info-bar">
     <span class="actions">{% trans "actions: " %}
-      <a href="{% url chords:view-song-simple object.id %}" title="{% trans "view a simpler html display of this song" %}"><img src="{% url media "chords/img/icons/16x16/simple.png" %}" width="16" height="16"/></a>
-      <a href="{% url chords:view-song-pdf object.id %}" title="{% trans "download song in PDF format" %}"><img src="{% url media "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a>
-      <a href="{% url chords:view-song-text object.id %}" title="{% trans "view original text file" %}"><img src="{% url media "chords/img/icons/16x16/text.png" %}" width="16" height="16"/></a>
-      <a href="{% url admin:chords_song_change object.id %}" title="{% trans "edit this song" %}"><img src="{% url media "chords/img/icons/16x16/edit.png" %}" width="16" height="16"/></a>
+      <a href="{% url chords:view-song-simple object.id %}" title="{% trans "view a simpler html display of this song" %}"><img src="{% static "chords/img/icons/16x16/simple.png" %}" width="16" height="16"/></a>
+      <a href="{% url chords:view-song-pdf object.id %}" title="{% trans "download song in PDF format" %}"><img src="{% static "chords/img/icons/16x16/pdf.png" %}" width="16" height="16"/></a>
+      <a href="{% url chords:view-song-text object.id %}" title="{% trans "view original text file" %}"><img src="{% static "chords/img/icons/16x16/text.png" %}" width="16" height="16"/></a>
+      <a href="{% url admin:chords_song_change object.id %}" title="{% trans "edit this song" %}"><img src="{% static "chords/img/icons/16x16/edit.png" %}" width="16" height="16"/></a>
     </span>
-    <span class="revision-info"><img src="{% url media "chords/img/icons/16x16/ok.png" %}" alt="[v]"/> {% trans "Last revision by" %} <span class="revision-author">{{ object.user.first_name.capitalize }}</span> {% trans "on" %} <span class="revision-author">{{ object.updated|date:"l, d/b/Y" }}</span></span>
+    <span class="revision-info"><img src="{% static "chords/img/icons/16x16/ok.png" %}" alt="[v]"/> {% trans "Last revision by" %} <span class="revision-author">{{ object.user.first_name.capitalize }}</span> {% trans "on" %} <span class="revision-author">{{ object.updated|date:"l, d/b/Y" }}</span></span>
   </div>
 
   <p class="title">{{ object.title }}</p>
