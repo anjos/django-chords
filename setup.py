@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 # Created by Andre Anjos <andre.dos.anjos@cern.ch>
-# Seg 14 Set 2009 14:42:06 CEST 
+# Seg 14 Set 2009 14:42:06 CEST
 
 """Installation instructions for django-chords
 """
 
 from setuptools import setup, find_packages
-        
+
 setup(
 
     name = 'django-chords',
@@ -38,7 +38,7 @@ setup(
     install_requires = [
       'Django>=1.2',
       'docutils',
-      'PIL',
+      'pillow',
       'reportlab',
       ],
 

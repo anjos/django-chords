@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 # Andre Anjos <andre.anjos@idiap.ch>
-# Fri 08 Oct 2010 14:18:40 CEST 
+# Fri 08 Oct 2010 14:18:40 CEST
 
 """
 """
 
 from django.contrib import admin
 from django import forms
-from django.utils.translation import *
+#from django.utils.translation import *
 from django.utils.translation import ugettext_lazy as _
 from django.core.files.images import ImageFile
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 
-from models import *
-from parser import syntax_analysis, parse
+from .models import *
+from .parser import syntax_analysis, parse
 import codecs
 
 class ArtistAdminForm(forms.ModelForm):
@@ -54,7 +54,7 @@ class ArtistAdmin(admin.ModelAdmin):
   list_filter = ('color',)
   ordering = ('name', 'color',)
   list_per_page = 10
-  search_fields = ['name', 'color',] 
+  search_fields = ['name', 'color',]
 
 admin.site.register(Artist, ArtistAdmin)
 
@@ -78,7 +78,7 @@ class ConvertTextarea(forms.widgets.Textarea):
             'title': ugettext(u'Convert top-chord format into chordpro!'),
             'name': ugettext(u'To chordpro'),
         }
-    
+
     return mark_safe(v)
 
 class SongAdminForm(forms.ModelForm):
@@ -86,13 +86,13 @@ class SongAdminForm(forms.ModelForm):
 
   class Meta:
     model = Song
-  
+
   class Media:
     css = {
         'screen': ('chords/css/admin.css',)
         }
     js = ('http://www.google.com/jsapi', 'chords/js/translate.js',)
-    
+
   def clean_song(self):
     try:
       syntax_analysis(parse(self.cleaned_data["song"]))
@@ -104,7 +104,7 @@ def two_columns(obj):
   return obj.two_columns
 two_columns.short_description = _(u'Two Columns')
 two_columns.boolean = True
-    
+
 class SongAdmin(admin.ModelAdmin):
   form = SongAdminForm
   list_display = ('title', 'performer', 'composer', 'year', 'tone', 'user', 'date', 'updated', count_collections, two_columns)
