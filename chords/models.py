@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 # Andre Anjos <andre.anjos@idiap.ch>
-# Mon 04 Oct 2010 15:05:04 CEST 
+# Mon 04 Oct 2010 15:05:04 CEST
 
 # A note on strftime: for PDF/unicode handling always decode the output of
 # that function with .decode('latin-1') or TypeErrors may occur.
@@ -40,7 +40,7 @@ class Artist(models.Model):
   name = models.CharField(_(u'Name'), help_text=_(u'You can write here the name of the artist.'), max_length=100, blank=False, null=False, unique=True)
 
   color = models.CharField(_(u'Color'), max_length=3, help_text=_(u'The hexadecimal 3-digit color representation of this artist in the RGB format. Example: #fff for white, #000 for black or #f00 for pure red. Omit the "#" (hash mark) when you specify the color.'), null=False, blank=False)
-  
+
   avatar = models.ImageField(_('Avatar'), upload_to=upload_path, help_text=_('Specify here the file that will be uploaded. This file should be a photo of the artist. The image has to be a portrait of 3x4 in one of the web-supported formats like JPEG or PNG.'), null=True, blank=True)
 
   def _image(self):
@@ -48,12 +48,12 @@ class Artist(models.Model):
     if self.avatar: return self.avatar
 
     path = os.path.join('chords', 'img', 'unknown.jpg')
-    f = ImageFile(open(media(path), 'rb'))
-    f.url = os.path.join(settings.MEDIA_URL, path) 
+    f = ImageFile(open(os.path.join(settings.STATIC_ROOT, path), 'rb'))
+    f.url = os.path.join(settings.STATIC_URL, path)
     return f
 
   image = property(_image)
-  
+
   def pdf_color(self):
    """Returns the equivalent reportlab Color object from the artist color."""
 
@@ -75,12 +75,12 @@ class Artist(models.Model):
 
   def __unicode__(self):
     return self.name
-  
+
   def last_update(self):
     """Returns the last updated song or this artist."""
     as_performer = self.performer.order_by('-updated')
     as_composer = self.composer.order_by('-updated')
-    if not as_performer.count() and as_composer.count(): 
+    if not as_performer.count() and as_composer.count():
       return as_composer[0]
     elif not as_composer.count() and as_performer.count():
       return as_performer[0]
@@ -159,10 +159,10 @@ class Song(models.Model):
 
   user = models.ForeignKey(User, null=False)
 
-  date = models.DateTimeField(_('Created'), 
+  date = models.DateTimeField(_('Created'),
       auto_now_add=True, editable=False, null=False, blank=False)
 
-  updated = models.DateTimeField(_('Last updated'), 
+  updated = models.DateTimeField(_('Last updated'),
       auto_now=True, editable=False, null=False, blank=False)
 
   title = models.CharField(_(u'Title'), max_length=100, help_text=_(u'This song\'s title'), blank=False, null=False)
@@ -192,7 +192,7 @@ class Song(models.Model):
   def __unicode__(self):
     return ugettext(u'%(title)s in %(tone)s (%(performer)s)') % \
         {
-         'title': self.title, 
+         'title': self.title,
          'tone': self.get_tone_display(),
          'performer': self.performer.name
         }
@@ -205,7 +205,7 @@ class Song(models.Model):
     if len(i) <= 1: return i
     #else, we can split it better
     cut = len(i)/2
-    if len(i)%2 == 1: 
+    if len(i)%2 == 1:
       #if the number of elements is odd, put more on the first column
       cut += 1
     return (i[:cut], i[cut:])
@@ -221,7 +221,7 @@ class Song(models.Model):
     from reportlab.lib.colors import Color
     from reportlab.lib.units import cm
     from time import strftime
-    
+
     # draws the rectangle with the performer name and picture
     # remember: coordinates (0,0) start at bottom left and go up and to the
     # right!
@@ -230,14 +230,14 @@ class Song(models.Model):
     page_width = doc.leftMargin + doc.width + doc.rightMargin
     y = page_height - doc.topMargin + 0.2*cm # a bit above the top margin
     rect_height = page_height - y
-    canvas.rect(0, y, page_width, rect_height, fill=True, stroke=False) 
+    canvas.rect(0, y, page_width, rect_height, fill=True, stroke=False)
 
     image = self.performer.image
-    image_height = 100 
-    image_width = (image_height/float(image.height)) * image.width 
+    image_height = 100
+    image_width = (image_height/float(image.height)) * image.width
     padding = 0.5*cm
     image_x = page_width - image_width - padding
-    image_y = page_height - padding - image_height 
+    image_y = page_height - padding - image_height
     border = 4
     canvas.setFillGray(1)
     canvas.setStrokeGray(0.8)
@@ -270,7 +270,7 @@ class Song(models.Model):
       canvas.setLineWidth(0.1*cm)
       canvas.setStrokeAlpha(0.5)
       canvas.setLineCap(1) #round ends
-      canvas.line(page_width/2, doc.bottomMargin+start_pad, 
+      canvas.line(page_width/2, doc.bottomMargin+start_pad,
           page_width/2, image_y-border-start_pad)
 
   def pdf_template_id(self):
@@ -296,7 +296,7 @@ class Song(models.Model):
       frames = [
           Frame(doc.leftMargin, doc.bottomMargin, frame_width, doc.height,
             id='column-1', leftPadding=0, rightPadding=0),
-          Frame(doc.leftMargin + frame_width + padding, doc.bottomMargin, 
+          Frame(doc.leftMargin + frame_width + padding, doc.bottomMargin,
             frame_width, doc.height - 2 * cm,
             id='column-2', leftPadding=0, rightPadding=0),
           ]
@@ -335,7 +335,7 @@ class Song(models.Model):
     title.textLine(u"%s" % (self.title))
     page_x = doc.width+doc.rightMargin+0.2*cm
     page_y = doc.bottomMargin-(0.1*cm)
-    page_fontsize = 11 
+    page_fontsize = 11
     page = canvas.beginText()
     page.setTextOrigin(page_x, page_y)
     page.setFont('Helvetica-Bold', page_fontsize)
@@ -349,15 +349,15 @@ class Song(models.Model):
         page_fontsize, page_number)
     canvas.circle(circle_x, circle_y, 1.5*page_fontsize, fill=True,
         stroke=False)
-    
+
     canvas.drawText(title)
     canvas.drawText(page)
 
-    canvas.restoreState() 
+    canvas.restoreState()
 
   def pdf_story(self, doc):
     """Writes itself as a PDF story."""
-  
+
     from pdf import Spacer, Paragraph, style, fontsize, tide, colwidth
 
     # what is the maximum width of text?
@@ -365,7 +365,7 @@ class Song(models.Model):
     else: width = colwidth['single']
 
     story = [Paragraph(self.title, style['song-title'])]
-    story.append(Paragraph(ugettext(u'Tone') + ': ' + self.get_tone_display(), 
+    story.append(Paragraph(ugettext(u'Tone') + ': ' + self.get_tone_display(),
       style['tone']))
     story.append(Spacer(1, fontsize))
     story += [k.as_flowable(width) for k in self.items()]
@@ -381,7 +381,7 @@ class Collection(models.Model):
 
   name = models.CharField(_(u'Name'), max_length=100, help_text=_(u'The name of this collection'), blank=False, null=False, unique=True)
 
-  date = models.DateTimeField(_('Created'), 
+  date = models.DateTimeField(_('Created'),
       auto_now_add=True, editable=False, null=False, blank=False)
 
   updated = models.DateTimeField(_('Last updated'),
@@ -396,12 +396,12 @@ class Collection(models.Model):
     verbose_name_plural = _(u"collections")
 
   def __unicode__(self):
-    return ungettext(u'Collection(%(name)s from %(owner)s, %(songs)d song)', 
-                     u'Collection(%(name)s from %(owner)s, %(songs)d songs)', 
+    return ungettext(u'Collection(%(name)s from %(owner)s, %(songs)d song)',
+                     u'Collection(%(name)s from %(owner)s, %(songs)d songs)',
                      self.song.count()) % \
                          {
-                           'name': self.name, 
-                           'songs': self.song.count(), 
+                           'name': self.name,
+                           'songs': self.song.count(),
                            'owner': self.owner.username
                          }
 
@@ -433,7 +433,7 @@ class Collection(models.Model):
         },
         style['cover-subtitle']))
     return story
-  
+
   def get_absolute_url(self):
     return reverse('chords:view-collection', kwargs={'collection_id': self.id})
 
